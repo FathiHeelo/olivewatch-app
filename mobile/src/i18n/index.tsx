@@ -3,6 +3,7 @@
 // English: the English text and a left-to-right layout. Strings missing from the dictionary are shown as written.
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { DICT } from './dictionary';
+import { applyGlossary } from './glossary';
 
 export type Lang = 'ar' | 'en';
 
@@ -48,11 +49,12 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     (s: string) => {
       const key = s.replace(/\s+/g, ' ').trim();
       const hit = DICT[key];
-      if (!hit) return s;
+      // Arabic: the shared glossary guarantees "English (pronunciation)" for every scientific term, translated or not.
+      if (!hit) return lang === 'ar' ? applyGlossary(s, 'ar') : s;
       const lead = s.match(/^\s*/)?.[0] ?? '';
       const tail = s.match(/\s*$/)?.[0] ?? '';
       const v = hit[lang];
-      return v === '' ? '' : `${lead}${v}${tail}`;
+      return v === '' ? '' : `${lead}${lang === 'ar' ? applyGlossary(v, 'ar') : v}${tail}`;
     },
     [lang],
   );

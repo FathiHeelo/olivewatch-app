@@ -3,6 +3,7 @@
 // English: the English text, left-to-right. A key missing from the dictionary is shown as written.
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { DICT } from './dictionary';
+import { applyGlossary } from './glossary';
 
 export type Lang = 'ar' | 'en';
 
@@ -54,7 +55,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
       // In Arabic a percentage such as 86% must stay one left-to-right run, or the sign jumps to the wrong side.
       t: (key) => {
         const v = DICT[key]?.[lang] ?? key;
-        return lang === 'ar' ? v.replace(/([+-]?\d[\d.,]*%)/g, '⁦$1⁩') : v;
+        return lang === 'ar' ? applyGlossary(v, 'ar').replace(/([+-]?\d[\d.,]*%)/g, '⁦$1⁩') : v;
       },
       pick: (ar, en) => (lang === 'ar' ? ar : en),
     }),

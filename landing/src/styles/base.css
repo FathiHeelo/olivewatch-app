@@ -1,0 +1,143 @@
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/700.css';
+
+:root {
+  --ground: #fafaf6;
+  --surface: #ffffff;
+  --raised: #f1f2ec;
+  --border: #e3e5da;
+  --text: #191d12;
+  --muted: #5c6254;
+  --olive: #4d6b1f;
+  --sage: #d5dec3;
+  --gold: #d9a81e;
+  --ink: #14170f;
+  --accent-soft: #f4f7ec;
+  --accent-track: #e1ebc9;
+  --warning-ink: #92400e;
+  --warning-soft: #fef3c7;
+  --axis: 42%; /* the vertical axis of the printed-report layout */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+  font-variant-numeric: tabular-nums;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-weight: 700;
+  line-height: 1.25; /* Arabic needs room; no negative letter-spacing anywhere */
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* One solid rectangular button, 56px, square corners. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 0 32px;
+  border: 0;
+  border-radius: 0;
+  background: var(--olive);
+  color: #fff;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease-out, background-color 120ms ease-out;
+}
+
+.btn:hover {
+  background: #3b5317;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* On dark pages the same button flips to gold. */
+.on-dark .btn {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.on-dark .btn:hover {
+  background: #e6b72e;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.ltr {
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0.001;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.reveal {
+  animation: fade-in 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    animation: none;
+  }
+  .btn,
+  .btn:active {
+    transition: none;
+    transform: none;
+  }
+}

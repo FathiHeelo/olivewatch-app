@@ -1,0 +1,102 @@
+/* Printed-annual-report layout: every page has the same vertical axis at ~42% of the width (measured from the
+   right, the start side in RTL). The folio column sits on one side of the rule, the content on the other.
+   Pages are either text pages (ground) or full-bleed flat colour pages. Solid colours only. */
+.page {
+  width: 100%;
+  padding: 112px 0;
+}
+
+.page-ground {
+  background: var(--ground);
+  color: var(--text);
+}
+
+.page-sage {
+  background: var(--sage);
+  color: var(--ink);
+}
+
+.page-gold {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.page-olive {
+  background: var(--olive);
+  color: #fff;
+}
+
+.page-ink {
+  background: var(--ink);
+  color: #fff;
+}
+
+.axis {
+  display: grid;
+  grid-template-columns: var(--axis) minmax(0, 1fr);
+  width: 100%;
+}
+
+.folio {
+  padding-inline: 48px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0; /* never negative, never positive on Arabic */
+}
+
+.folio .n {
+  display: block;
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.folio .t {
+  display: block;
+  margin-top: 8px;
+}
+
+.body {
+  border-inline-start: 2px solid currentColor;
+  padding-inline: 48px 8vw;
+  min-width: 0;
+}
+
+.body > * + * {
+  margin-top: 24px;
+}
+
+.lede {
+  font-size: 22px;
+  max-width: 34ch;
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 17px;
+  }
+
+  .page {
+    padding: 72px 0;
+  }
+
+  /* Phone: the axis moves to the edge; folio stacks above the content. */
+  .axis {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 24px;
+  }
+
+  .folio {
+    padding-inline: 20px;
+  }
+
+  .folio .n {
+    font-size: 40px;
+  }
+
+  .body {
+    border-inline-start-width: 2px;
+    margin-inline-start: 20px;
+    padding-inline: 20px 20px;
+  }
+}

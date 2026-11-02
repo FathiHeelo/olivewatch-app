@@ -1,0 +1,38 @@
+{
+  "_note": "Sample data for the mill platform. Everything here is sample (تجريبية); oil screening results are simulated (محاكاة). KPIs are computed from these batches, never stored. Climate inputs are stored per supplier; the CSI is recomputed in code.",
+  "mill": { "id": "mill-nasr", "name": "معصرة النصر — نابلس", "city": "نابلس", "season": "2026", "source": "تجريبية" },
+  "suppliers": {
+    "sup-beita": { "name": "مزرعة بيتا", "village": "بيتا", "lat": 32.1533, "lng": 35.2833, "dT": 2, "dP": -20, "dryDays": 10, "source": "محاكاة" },
+    "sup-asira": { "name": "مزرعة عصيرة الشمالية", "village": "عصيرة الشمالية", "lat": 32.2294, "lng": 35.2681, "dT": 1.5, "dP": -15, "dryDays": 8, "source": "محاكاة" },
+    "sup-deirsharaf": { "name": "مزرعة دير شرف", "village": "دير شرف", "lat": 32.2400, "lng": 35.1900, "dT": 2.5, "dP": -28, "dryDays": 14, "source": "محاكاة" },
+    "sup-sebastia": { "name": "مزرعة سبسطية", "village": "سبسطية", "lat": 32.2756, "lng": 35.1914, "dT": 3.2, "dP": -34, "dryDays": 19, "source": "محاكاة" },
+    "sup-awarta": { "name": "مزرعة عورتا", "village": "عورتا", "lat": 32.1700, "lng": 35.3050, "dT": 1.2, "dP": -12, "dryDays": 6, "source": "محاكاة" }
+  },
+  "batches": {
+    "B-2026-0412": { "millId": "mill-nasr", "supplierId": "sup-beita", "village": "بيتا", "receivedAt": "2026-10-07", "pressedAt": "2026-10-08", "oliveKg": 1240, "oilLitres": 248, "status": "complete", "source": "تجريبية" },
+    "B-2026-0413": { "millId": "mill-nasr", "supplierId": "sup-asira", "village": "عصيرة الشمالية", "receivedAt": "2026-10-13", "pressedAt": "2026-10-14", "oliveKg": 860, "oilLitres": 163, "status": "complete", "source": "تجريبية" },
+    "B-2026-0414": { "millId": "mill-nasr", "supplierId": "sup-deirsharaf", "village": "دير شرف", "receivedAt": "2026-10-20", "pressedAt": "2026-10-21", "oliveKg": 2100, "oilLitres": 399, "status": "complete", "source": "تجريبية" },
+    "B-2026-0415": { "millId": "mill-nasr", "supplierId": "sup-sebastia", "village": "سبسطية", "receivedAt": "2026-10-27", "pressedAt": "2026-10-28", "oliveKg": 540, "oilLitres": 97, "status": "needs_review", "source": "تجريبية" },
+    "B-2026-0416": { "millId": "mill-nasr", "supplierId": "sup-awarta", "village": "عورتا", "receivedAt": "2026-10-31", "pressedAt": null, "oliveKg": 1650, "oilLitres": null, "status": "processing", "source": "تجريبية" }
+  },
+  "samples": {
+    "S-0412": { "batchId": "B-2026-0412", "sampledAt": "2026-10-09", "result": "within_reference", "confidence": 0.84, "source": "محاكاة" },
+    "S-0413": { "batchId": "B-2026-0413", "sampledAt": "2026-10-15", "result": "within_reference", "confidence": 0.79, "source": "محاكاة" },
+    "S-0414": { "batchId": "B-2026-0414", "sampledAt": "2026-10-22", "result": "within_reference", "confidence": 0.88, "source": "محاكاة" },
+    "S-0415": { "batchId": "B-2026-0415", "sampledAt": "2026-10-29", "result": "needs_lab", "confidence": 0.58, "source": "محاكاة" },
+    "S-0416": { "batchId": "B-2026-0416", "sampledAt": null, "result": "pending", "confidence": null, "source": "محاكاة" }
+  },
+  "ndvi": {
+    "_note": "Simulated NDVI season series for the demo. Not a Sentinel-2 retrieval.",
+    "season2026": [
+      { "date": "2026-03-01", "value": 0.38 },
+      { "date": "2026-04-01", "value": 0.43 },
+      { "date": "2026-05-01", "value": 0.49 },
+      { "date": "2026-06-01", "value": 0.47 },
+      { "date": "2026-07-01", "value": 0.42 },
+      { "date": "2026-08-01", "value": 0.39 },
+      { "date": "2026-09-01", "value": 0.37 },
+      { "date": "2026-10-01", "value": 0.4 }
+    ]
+  }
+}

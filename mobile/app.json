@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "OliveWatch AI",
+    "slug": "olivewatch-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FAFAF6",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "olivewatch",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "نحتاج الوصول للصور لفحص الورقة",
+          "cameraPermission": "نحتاج الكاميرا لتصوير ورقة الزيتون"
+        }
+      ]
+    ]
+  }
+}

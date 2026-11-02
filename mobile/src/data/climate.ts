@@ -1,0 +1,34 @@
+// Climate Stress Index (CSI) from the OliveWatch AI proposal:
+//   CSI = 100 * [0.4*min(dT/4,1) + 0.4*min(-dP/40,1) + 0.2*min(d/30,1)]
+// dT = temperature anomaly (°C), dP = rainfall anomaly (mm, negative = deficit),
+// d  = consecutive dry days. Each term is clamped to [0,1].
+// Worked example: (2, -20, 10) -> 46.7
+
+const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
+
+export function climateStressIndex(dT: number, dP: number, dryDays: number): number {
+  const v = 100 * (0.4 * clamp01(dT / 4) + 0.4 * clamp01(-dP / 40) + 0.2 * clamp01(dryDays / 30));
+  return Math.round(v * 10) / 10;
+}
+
+export type StressBand = 'low' | 'medium' | 'high';
+
+// Band thresholds are an assumption of this demo (not from the proposal).
+export function stressBand(csi: number): { band: StressBand; label: string } {
+  if (csi < 33) return { band: 'low', label: 'إجهاد منخفض' };
+  if (csi < 66) return { band: 'medium', label: 'إجهاد متوسط' };
+  return { band: 'high', label: 'إجهاد مرتفع' };
+}
+
+// Simulated 30-day series that ends on today's CSI. Clearly labelled "محاكاة" in the UI
+// until real NASA POWER data is wired in.
+export function simulatedSeries(today: number, days = 30): number[] {
+  const out: number[] = [];
+  for (let i = 0; i < days; i++) {
+    const t = i / (days - 1);
+    const v = 33 + 13 * t + 4.5 * Math.sin(i * 0.9) + 2.5 * Math.sin(i * 2.3);
+    out.push(Math.max(0, Math.min(100, Math.round(v * 10) / 10)));
+  }
+  out[days - 1] = today;
+  return out;
+}

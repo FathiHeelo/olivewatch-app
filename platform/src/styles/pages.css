@@ -1,0 +1,83 @@
+/* Page layouts. */
+
+/* Overview: right rail (384px) next to the main column. In RTL the first grid column is on the right. */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 384px minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.overview-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.rail-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.rail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rail-list li:last-child .rail-row {
+  border-bottom: 0;
+}
+
+.rail-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.rail .btn {
+  width: 100%;
+}
+
+.chart {
+  width: 100%;
+  min-height: 1px;
+}
+
+.chart svg {
+  display: block;
+}
+
+.axis-text {
+  font-size: 12px;
+  fill: var(--muted);
+  font-family: inherit;
+}
+
+.value-text {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--text);
+  font-family: inherit;
+}
+
+.chart-note {
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1100px) {
+  .overview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    order: 2;
+  }
+}

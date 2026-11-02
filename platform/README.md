@@ -13,6 +13,23 @@ Everything shown is sample data (تجريبية); oil screening results are simu
 The Firebase web config is in `src/firebase.ts` (project identifiers, not secrets). Seed the database first:
 `cd ../firebase && npm install && npm run seed`.
 
+## Look and language
+The shell and the home page (`/`) follow the Stitch design "OliveWatch AI - Farmer Web Dashboard": brand card,
+five-item nav (Home, My Farms, AI Tools, Analytics, Profile), top bar, pledge banner, grove + weather, threat alert,
+six metrics, AI toolkit, activity + satellite view, recommended action. The grove (name, area, trees, health) is live
+from Firebase (`src/data/farm.ts`); the weather, metrics and activity feed are placeholder copy from the design.
+
+The language button (sidebar, top bar, Profile) switches Arabic (RTL) and English (LTR) and is remembered
+(`?lang=en|ar` overrides). In Arabic every string is Arabic except scientific terms, which keep their English name with
+the Arabic pronunciation in parentheses, e.g. `NDVI (إن دي في آي)`. Strings: `src/i18n/dictionary.ts`.
+The AI tools from the design open as overlays (`src/components/overlays/`): the AI agronomist drawer (chat with canned
+replies), farm details, the leaf scanner (file picker; the result is the design's fixed Peacock Spot example, with a
+"preliminary" note) and "Certify Press Lot" (UI only: it shows a toast and writes nothing). Other buttons show the toasts the
+design has.
+
+The mill pages built earlier (`/mill`, `/batches`, `/suppliers`, `/samples`, `/climate`, `/traceability`) keep working
+and take the new colours, but they are still Arabic-only and are not translated yet; they are reachable from `/tools`.
+
 ## Pages
 
 | Route | Page |

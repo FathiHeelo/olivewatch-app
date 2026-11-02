@@ -2,25 +2,41 @@
 @import '@fontsource/ibm-plex-sans-arabic/500.css';
 @import '@fontsource/ibm-plex-sans-arabic/600.css';
 @import '@fontsource/ibm-plex-sans-arabic/700.css';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+@import '@fontsource/plus-jakarta-sans/800.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/700.css';
 
+/* Tokens from the Stitch design "OliveWatch AI - Farmer Web Dashboard" (Terra Terroir Agritech). */
 :root {
-  --ground: #fafaf6;
+  --ground: #f5fbf0;
   --surface: #ffffff;
-  --raised: #f1f2ec;
-  --border: #e3e5da;
-  --text: #191d12;
-  --muted: #5c6254;
-  --accent: #4d6b1f;
-  --accent-soft: #f4f7ec;
-  --accent-track: #e1ebc9;
-  --accent-ink: #2f4413;
-  --negative: #b42318;
-  --negative-soft: #fef2f2;
-  --warning-ink: #92400e;
-  --warning-soft: #fef3c7;
-  --radius-card: 8px;
-  --radius-control: 6px;
+  --raised: #eaf0e5;
+  --low: #f0f5ea;
+  --border: #dee4da;
+  --outline: #c3c8be;
+  --text: #171d17;
+  --muted: #434841;
+  --faint: #737970;
+  --accent: #354f32; /* primary-container: the filled button */
+  --accent-soft: #f0f5ea;
+  --accent-track: #d0e998; /* secondary-container: the lime tint */
+  --accent-ink: #1f381d; /* primary */
+  --secondary: #516524;
+  --gold: #f0bf64;
+  --gold-ink: #604400;
+  --negative: #ba1a1a;
+  --negative-soft: #ffdad6;
+  --warning-ink: #604400;
+  --warning-soft: #fff3dd;
+  --radius-card: 20px;
+  --radius-control: 12px;
   --gap: 24px;
+  --font-latin: 'Plus Jakarta Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-label: 'Space Grotesk', 'IBM Plex Sans Arabic', system-ui, sans-serif;
 }
 
 * {
@@ -32,7 +48,7 @@ body {
   margin: 0;
   background: var(--ground);
   color: var(--text);
-  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  font-family: var(--font-latin);
   font-size: 15px;
   line-height: 1.55;
   font-variant-numeric: tabular-nums;
@@ -47,13 +63,13 @@ p {
 
 h1 {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
 }
 
 h2 {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
 }
 

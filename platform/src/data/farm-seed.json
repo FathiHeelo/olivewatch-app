@@ -1,0 +1,23 @@
+{
+  "_note": "Source of truth for the farm demo data. Seeded to Realtime Database by firebase/seed.mjs and used as the app's offline fallback. Climate stores the INPUTS only; csi is always recomputed in code.",
+  "farms": {
+    "farm-east": {
+      "name": "بيارة الكرم العتيق",
+      "nameEn": "Al-Karm Al-Ateeq Grove",
+      "location": "بيتا، نابلس",
+      "locationEn": "Beita, Nablus",
+      "areaDunum": 42,
+      "trees": 620,
+      "varieties": "زيتون صوري معمر",
+      "health": 94
+    }
+  },
+  "plots": {
+    "p1": { "farmId": "farm-east", "name": "قطعة أ", "nameEn": "Plot A", "trees": 240, "status": "healthy", "lastCheck": "أمس", "lastCheckDays": 1, "source": "تجريبية" },
+    "p2": { "farmId": "farm-east", "name": "قطعة ب", "nameEn": "Plot B", "trees": 220, "status": "needs_check", "lastCheck": "منذ 3 أيام", "lastCheckDays": 3, "source": "تجريبية" },
+    "p3": { "farmId": "farm-east", "name": "قطعة ج", "nameEn": "Plot C", "trees": 160, "status": "healthy", "lastCheck": "منذ يومين", "lastCheckDays": 2, "source": "تجريبية" }
+  },
+  "climate": {
+    "latest": { "dT": 2, "dP": -20, "dryDays": 10, "baseline": "2005–2024", "source": "محاكاة", "provider": "NASA POWER" }
+  }
+}

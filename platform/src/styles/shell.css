@@ -1,77 +1,173 @@
-/* Shell: right sidebar (RTL start), 64px top bar, content column. Flat: no shadows, no gradients. */
-.shell {
+/* Shell from the Stitch "Farmer Web Dashboard". The sidebar sits on the inline-start side, so it flips with the
+   page direction (right in Arabic, left in English). */
+.fw-shell {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
+  grid-template-columns: 264px minmax(0, 1fr);
   min-height: 100vh;
 }
 
-.sidebar {
+.fw-side {
   position: sticky;
   top: 0;
   height: 100vh;
   background: var(--surface);
   border-inline-end: 1px solid var(--border);
-  padding: 20px 12px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
-.wordmark {
-  font-size: 20px;
-  font-weight: 700;
-  padding: 0 12px;
-  line-height: 32px;
-}
-
-.sidebar nav {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.nav-row {
+.fw-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 42px;
-  padding: 0 12px;
-  border-radius: var(--radius-control);
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.fw-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--accent-track);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.fw-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.fw-brand-text strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-ink);
+}
+
+.fw-brand-text span {
+  font-size: 12px;
+  color: var(--secondary);
+  font-family: var(--font-label);
+}
+
+.fw-alert-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-card);
+  border: 1px solid #f0c8c0;
+  background: #fbeae4;
+  color: var(--negative);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.fw-alert-chip span {
+  flex: 1;
+}
+
+.fw-alert-chip em {
+  font-style: normal;
+  background: var(--negative);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-family: var(--font-label);
+}
+
+.fw-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fw-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 14px;
   color: var(--muted);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
 }
 
-.nav-row:hover {
-  background: var(--raised);
+.fw-nav-row:hover {
+  background: var(--low);
 }
 
-/* Active row: pale olive fill + dark olive text, no side bar. The icon alone gets the full olive hue. */
-.nav-row.active {
-  background: var(--accent-soft);
+.fw-nav-row.active {
+  background: var(--accent-track);
   color: var(--accent-ink);
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.nav-row.active svg {
-  color: var(--accent);
+.fw-side-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.nav-short {
-  display: none;
+.fw-lang-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--outline);
+  background: var(--low);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent-ink);
 }
 
-.main-col {
+.fw-lang-card span {
+  flex: 1;
+  text-align: start;
+}
+
+.fw-lang-card em {
+  font-style: normal;
+  font-size: 11px;
+  background: var(--accent-track);
+  border-radius: 8px;
+  padding: 2px 8px;
+}
+
+.fw-node {
+  font-size: 11px;
+  font-family: var(--font-label);
+  color: var(--muted);
+  background: var(--low);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.fw-main {
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
-.topbar {
-  height: 64px;
+.fw-top {
+  height: 76px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   padding: 0 32px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -80,57 +176,109 @@
   z-index: 10;
 }
 
-.search {
+.fw-top-gap {
+  flex: 1;
+}
+
+.fw-icon-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--low);
+  color: var(--accent-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.fw-dot {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--negative);
+}
+
+.fw-loc {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
-  width: min(360px, 100%);
-  padding: 0 12px;
-  background: var(--raised);
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  color: var(--muted);
-}
-
-.search input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  height: 100%;
-}
-
-.search:focus-within {
-  border-color: var(--accent);
-}
-
-.demo-note {
-  margin-inline-start: auto;
+  background: var(--low);
   font-size: 13px;
-  color: var(--muted);
+  font-weight: 600;
+  color: var(--accent-ink);
   white-space: nowrap;
 }
 
-.mill-switch {
+.fw-loc i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.fw-pill-btn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--outline);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fw-cert {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  border: 0;
+  background: var(--gold-ink);
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fw-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 40px;
-  padding: 0 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.3;
 }
 
-.topbar-mark {
-  display: none;
-  font-weight: 700;
-  font-size: 18px;
+.fw-user strong,
+.fw-user small {
+  display: block;
+}
+
+.fw-user small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.fw-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .banner {
@@ -139,25 +287,25 @@
   border-bottom: 1px solid #fde68a;
   padding: 10px 32px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.content {
-  padding: 32px;
+.fw-content {
+  padding: 28px 32px 48px;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
   min-width: 0;
 }
 
-@media (max-width: 760px) {
-  .shell {
+@media (max-width: 1000px) {
+  .fw-shell {
     grid-template-columns: minmax(0, 1fr);
-    padding-bottom: 68px;
+    padding-bottom: 72px;
   }
 
-  /* Phone: the sidebar becomes a bottom bar. */
-  .sidebar {
+  /* Narrow screens: the sidebar becomes a bottom bar with just the five nav items. */
+  .fw-side {
     position: fixed;
     inset: auto 0 0 0;
     height: 64px;
@@ -166,19 +314,22 @@
     border-inline-end: 0;
     border-top: 1px solid var(--border);
     flex-direction: row;
+    gap: 0;
   }
 
-  .wordmark {
+  .fw-brand,
+  .fw-alert-chip,
+  .fw-side-foot {
     display: none;
   }
 
-  .sidebar nav {
+  .fw-nav {
     flex-direction: row;
     width: 100%;
     gap: 0;
   }
 
-  .nav-row {
+  .fw-nav-row {
     flex: 1;
     min-width: 0;
     flex-direction: column;
@@ -190,44 +341,23 @@
     font-size: 11px;
   }
 
-  .nav-label {
-    display: none;
-  }
-
-  .nav-short {
-    display: block;
-    white-space: nowrap;
-  }
-
-  .topbar {
+  .fw-top {
     padding: 0 16px;
     gap: 8px;
+    overflow-x: auto;
   }
 
-  .topbar .search {
+  .fw-loc,
+  .fw-user > span:last-child,
+  .fw-cert span {
     display: none;
   }
 
-  .topbar-mark {
-    display: block;
-  }
-
-  .demo-note {
-    display: none;
-  }
-
-  .mill-switch {
-    margin-inline-start: auto;
-    min-width: 0;
-    padding: 0 10px;
-    font-size: 13px;
+  .fw-content {
+    padding: 20px 16px 40px;
   }
 
   .banner {
     padding: 10px 16px;
-  }
-
-  .content {
-    padding: 20px 16px;
   }
 }

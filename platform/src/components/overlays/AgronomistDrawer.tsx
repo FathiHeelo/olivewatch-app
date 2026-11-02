@@ -67,7 +67,7 @@ export default function AgronomistDrawer() {
       history.map((m) => ({ role: m.from === 'farmer' ? ('user' as const) : ('assistant' as const), text: m.text })),
       lang,
       // Trusted app data only: what the app itself knows.
-      { farm: { name: home.farm.nameEn ?? home.farm.name, areaDunum: home.farm.areaDunum, trees: home.farm.trees }, activeAlert: 'Peacock Spot risk in Plot 4B (morning humidity 86%)', climateStressIndex: home.climate.csi },
+      { farm: { name: home.farm.nameEn ?? home.farm.name, areaDunum: home.farm.areaDunum, trees: home.farm.trees }, activeAlert: 'Peacock Spot risk in Plot 4B (morning humidity 86%)', climateStressIndex: { value: home.climate.csi, scale: '0-100 index (not a percentage)' } },
     );
     setBusy(false);
     setMsgs((m) => [...m, r.ok ? { from: 'bot', text: r.data.reply, src: 'gemini' } : { from: 'bot', text: simulated(), src: 'simulated', note: why(r) }]);

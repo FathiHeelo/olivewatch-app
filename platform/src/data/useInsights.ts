@@ -27,7 +27,7 @@ export function useInsights(home: Home, lang: AiLang): InsightsAi | undefined {
       {
         alerts: [{ type: 'peacock_spot_risk', plot: '4B', morningHumidityPercent: 86 }],
         plotsNeedingCheck: home.plots.filter((p) => p.status === 'needs_check').map((p) => ({ name: p.nameEn ?? p.name, lastCheckDaysAgo: p.lastCheckDays })),
-        climateStressIndex: home.climate.csi,
+        climateStressIndex: { value: home.climate.csi, scale: '0-100 index (not a percentage)' },
       },
       lang,
     ).then((r) => {

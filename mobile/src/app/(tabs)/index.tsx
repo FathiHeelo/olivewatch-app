@@ -26,14 +26,14 @@ export default function Home() {
       <BrandHeader
         right={
           <Row style={{ gap: 10 }}>
-            <PressScale onPress={toggle} accessibilityLabel="عربي / EN" style={{ flexDirection: rowDir, alignItems: 'center', gap: 6, borderWidth: 1, borderColor: colors.outline, backgroundColor: colors.raised, borderRadius: radius.chip, paddingHorizontal: 12, height: 36 }}>
+            <PressScale onPress={toggle} accessibilityLabel="عربي / EN" style={{ flexDirection: rowDir, alignItems: 'center', gap: 6, borderWidth: 1, borderColor: colors.outline, backgroundColor: colors.raised, borderRadius: radius.chip, paddingHorizontal: 14, height: 48 }}>
               <Icon name="web" size={16} color={colors.primary} />
               <Txt size={12} weight="bold" color={colors.primary}>
                 عربي / EN
               </Txt>
             </PressScale>
             <View>
-              <View style={{ width: 40, height: 40, borderRadius: 14, backgroundColor: colors.raised, alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ width: 48, height: 48, borderRadius: 14, backgroundColor: colors.raised, alignItems: 'center', justifyContent: 'center' }}>
                 <Icon name="bell-outline" size={22} color={colors.primary} />
               </View>
               <View style={{ position: 'absolute', top: -4, right: -4, backgroundColor: colors.gold, borderRadius: 9, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center' }}>

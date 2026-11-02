@@ -7,6 +7,7 @@ import {
   Pressable,
   ScrollView,
   StyleProp,
+  StyleSheet,
   Text,
   TextProps,
   TextStyle,
@@ -25,19 +26,25 @@ type Face = 'arabic' | 'latin' | 'jakarta' | 'jakartaExtra' | 'label' | 'labelBo
 const faceFont = (face: Face, weight: Weight) =>
   face === 'latin' ? fonts.latin : face === 'jakarta' ? fonts.latinBold : face === 'jakartaExtra' ? fonts.latinExtra : face === 'label' ? fonts.label : face === 'labelBold' ? fonts.labelBold : fonts[weight];
 
+// Readability floor: text is never below 14px, in every face. Only pill chips and the tab-bar labels opt down to 12px
+// with `min={12}`. When the floor raises a size, a fixed lineHeight is scaled with it.
 export function Txt({
   size = 14,
   weight = 'regular',
   face = 'arabic',
   color = colors.text,
   ar: _ar = false,
+  min,
   style,
   children,
   ...rest
-}: TextProps & { size?: number; weight?: Weight; face?: Face; color?: string; ar?: boolean }) {
+}: TextProps & { size?: number; weight?: Weight; face?: Face; color?: string; ar?: boolean; min?: number }) {
   const { rtl, trNode } = useLang();
   const content = trNode(children);
   if (content === '') return null;
+  const px = Math.max(size, min ?? 14);
+  const flat = StyleSheet.flatten(style) as TextStyle | undefined;
+  const lineHeight = flat?.lineHeight !== undefined ? Math.round((flat.lineHeight * px) / size) : Math.round(px * 1.5);
   // The Latin faces have no Arabic glyphs: in Arabic mode every face maps to IBM Plex Sans Arabic.
   const bold = face === 'jakarta' || face === 'jakartaExtra' || face === 'labelBold';
   const font = rtl ? (bold || weight === 'bold' ? fonts.bold : face === 'arabic' ? fonts[weight] : fonts.medium) : faceFont(face, weight);
@@ -47,14 +54,14 @@ export function Txt({
       style={[
         {
           fontFamily: font,
-          fontSize: size,
+          fontSize: px,
           color,
           textAlign: rtl ? 'right' : 'left',
           writingDirection: rtl ? 'rtl' : 'ltr',
           fontVariant: ['tabular-nums'],
-          lineHeight: Math.round(size * 1.5),
         },
         style as TextStyle,
+        { lineHeight },
       ]}
     >
       {content}
@@ -119,7 +126,7 @@ export function Pill({ label, bg = colors.secondaryContainer, ink = colors.prima
   if (tr(label) === '') return null;
   return (
     <View style={{ backgroundColor: bg, borderRadius: radius.chip, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' }}>
-      <Txt size={size} weight="bold" face={face} color={ink} style={{ lineHeight: size + 7, textAlign: 'center' }}>
+      <Txt size={size} min={12} weight="bold" face={face} color={ink} style={{ lineHeight: size + 7, textAlign: 'center' }}>
         {label}
       </Txt>
     </View>
@@ -199,7 +206,7 @@ export function PageHeader({ title, subtitle, onBack, actions }: { title: string
     <Row style={{ minHeight: 64, paddingHorizontal: 12, justifyContent: 'space-between', backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
       <Row style={{ gap: 8, flexShrink: 1 }}>
         {onBack ? (
-          <PressScale onPress={onBack} accessibilityLabel="رجوع" style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+          <PressScale onPress={onBack} accessibilityLabel="رجوع" style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}>
             <Icon name={backIcon} size={24} color={colors.primary} />
           </PressScale>
         ) : null}
@@ -255,10 +262,10 @@ export function Slider({ value, min, max, step = 1, onChange }: { value: number;
       onMoveShouldSetResponder={() => true}
       onResponderGrant={set}
       onResponderMove={set}
-      style={{ height: 32, justifyContent: 'center' }}
+      style={{ height: 48, justifyContent: 'center' }}
     >
       <View style={{ height: 8, borderRadius: 4, backgroundColor: colors.border }} />
-      <View style={{ position: 'absolute', [rtl ? 'right' : 'left']: pct * (w - 22), top: 5, width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primaryContainer, borderWidth: 3, borderColor: colors.white }} />
+      <View style={{ position: 'absolute', [rtl ? 'right' : 'left']: pct * (w - 22), top: 13, width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primaryContainer, borderWidth: 3, borderColor: colors.white }} />
     </View>
   );
 }

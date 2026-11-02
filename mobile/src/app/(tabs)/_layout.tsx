@@ -31,7 +31,7 @@ function TabBar({ state }: BarProps) {
           };
           if (center && !active) {
             return (
-              <PressScale key={t.name} onPress={go} accessibilityLabel={t.ar} style={{ alignItems: 'center', width: 76 }}>
+              <PressScale key={t.name} onPress={go} accessibilityLabel={t.ar} style={{ alignItems: 'center', width: 76, minHeight: 52 }}>
                 <View
                   style={{
                     marginTop: -34,
@@ -47,7 +47,7 @@ function TabBar({ state }: BarProps) {
                 >
                   <Icon name="sprout" size={28} color={colors.tertiary} />
                 </View>
-                <Txt size={12} face="label" color={colors.text} style={{ textAlign: 'center', lineHeight: 16 }}>
+                <Txt size={12} min={12} face="label" color={colors.text} style={{ textAlign: 'center', lineHeight: 16 }}>
                   {t.label}
                 </Txt>
               </PressScale>
@@ -68,7 +68,7 @@ function TabBar({ state }: BarProps) {
               }}
             >
               <Icon name={t.icon} size={24} color={active ? colors.onPrimaryContainer : colors.nav} />
-              <Txt size={12} face="label" color={active ? colors.onPrimaryContainer : colors.nav} style={{ textAlign: 'center', lineHeight: 16 }}>
+              <Txt size={12} min={12} face="label" color={active ? colors.onPrimaryContainer : colors.nav} style={{ textAlign: 'center', lineHeight: 16 }}>
                 {t.label}
               </Txt>
             </PressScale>

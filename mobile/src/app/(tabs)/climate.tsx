@@ -76,7 +76,7 @@ export default function ClimateScreen() {
                 <Pressable
                   key={t}
                   onPress={() => setTab(i)}
-                  style={{ flex: 1, height: 36, borderRadius: 10, backgroundColor: tab === i ? colors.primaryContainer : 'transparent', alignItems: 'center', justifyContent: 'center' }}
+                  style={{ flex: 1, height: 48, borderRadius: 10, backgroundColor: tab === i ? colors.primaryContainer : 'transparent', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <Txt size={11} face="labelBold" color={tab === i ? colors.white : colors.muted} style={{ textAlign: 'center' }}>{t}</Txt>
                 </Pressable>

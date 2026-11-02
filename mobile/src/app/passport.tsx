@@ -29,7 +29,7 @@ export default function Passport() {
     <Screen>
       <Row style={{ minHeight: 68, paddingHorizontal: 12, justifyContent: 'space-between', backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
         <Row style={{ gap: 10, flex: 1 }}>
-          <PressScale onPress={() => router.back()} accessibilityLabel="رجوع" style={{ width: 36, height: 40, justifyContent: 'center' }}>
+          <PressScale onPress={() => router.back()} accessibilityLabel="رجوع" style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}>
             <Icon name={backIcon} size={24} color={colors.primary} />
           </PressScale>
           <View>

@@ -62,6 +62,33 @@ export async function predictLeaf(uri: string): Promise<LeafResult> {
   };
 }
 
+// UV oil screening: a photo of the oil sample taken under a UV torch in a dark room.
+// Real service: POST {ML_URL}/predict/oil (field `file`) -> { label, confidence, data_source }.
+// Without the service a deterministic mock answers and is labelled "محاكاة".
+export async function predictOil(uri: string): Promise<OilResult> {
+  if (ML_URL) {
+    try {
+      const blob = await (await fetch(uri)).blob();
+      const form = new FormData();
+      form.append('file', blob as any, 'oil_uv.jpg');
+      const res = await fetch(`${ML_URL}/predict/oil`, { method: 'POST', body: form });
+      if (!res.ok) throw new Error(String(res.status));
+      const j = await res.json();
+      const src: Source = j.data_source === 'simulated' ? 'محاكاة' : 'حقيقية';
+      if (j.rejected || j.confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence: j.confidence ?? 0, source: src };
+      return { kind: 'class', label: j.label, confidence: j.confidence, source: src };
+    } catch {
+      // fall through to the mock
+    }
+  }
+  await new Promise((r) => setTimeout(r, 1000));
+  const h = hash(uri);
+  const classes: OilClass[] = ['reference', 'anomalous', 'adulteration_indicator'];
+  const confidence = 0.52 + ((h % 40) / 100);
+  if (confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence, source: 'محاكاة' };
+  return { kind: 'class', label: classes[h % 3], confidence, source: 'محاكاة' };
+}
+
 // Oil screening is simulated by design (no real oil images exist for the demo).
 export const oilSamples: { id: string; name: string; result: OilResult }[] = [
   { id: 'a', name: 'عينة أ', result: { kind: 'class', label: 'reference', confidence: 0.82, source: 'محاكاة' } },

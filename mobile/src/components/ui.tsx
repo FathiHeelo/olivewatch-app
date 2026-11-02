@@ -2,52 +2,74 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
+  GestureResponderEvent,
   LayoutChangeEvent,
   Pressable,
   ScrollView,
   StyleProp,
-  StyleSheet,
   Text,
   TextProps,
   TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
-import Svg, { Line, Polyline, Circle } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useLang } from '../i18n';
 import { colors, fonts, radius } from '../theme';
 
-// ---------- Text (always RTL, tabular numerals) ----------
-type Weight = keyof typeof fonts;
+export type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+// ---------- Text: left-to-right like the Stitch design; `ar` for Arabic-only blocks; `face` for the Latin faces ----------
+type Weight = 'regular' | 'medium' | 'semibold' | 'bold';
+type Face = 'arabic' | 'latin' | 'jakarta' | 'jakartaExtra' | 'label' | 'labelBold';
+const faceFont = (face: Face, weight: Weight) =>
+  face === 'latin' ? fonts.latin : face === 'jakarta' ? fonts.latinBold : face === 'jakartaExtra' ? fonts.latinExtra : face === 'label' ? fonts.label : face === 'labelBold' ? fonts.labelBold : fonts[weight];
+
 export function Txt({
-  size = 15,
+  size = 14,
   weight = 'regular',
+  face = 'arabic',
   color = colors.text,
+  ar: _ar = false,
   style,
+  children,
   ...rest
-}: TextProps & { size?: number; weight?: Weight; color?: string }) {
+}: TextProps & { size?: number; weight?: Weight; face?: Face; color?: string; ar?: boolean }) {
+  const { rtl, trNode } = useLang();
+  const content = trNode(children);
+  if (content === '') return null;
+  // The Latin faces have no Arabic glyphs: in Arabic mode every face maps to IBM Plex Sans Arabic.
+  const bold = face === 'jakarta' || face === 'jakartaExtra' || face === 'labelBold';
+  const font = rtl ? (bold || weight === 'bold' ? fonts.bold : face === 'arabic' ? fonts[weight] : fonts.medium) : faceFont(face, weight);
   return (
     <Text
       {...rest}
       style={[
         {
-          fontFamily: fonts[weight],
+          fontFamily: font,
           fontSize: size,
           color,
-          textAlign: 'right',
-          writingDirection: 'rtl',
+          textAlign: rtl ? 'right' : 'left',
+          writingDirection: rtl ? 'rtl' : 'ltr',
           fontVariant: ['tabular-nums'],
           lineHeight: Math.round(size * 1.5),
         },
         style as TextStyle,
       ]}
-    />
+    >
+      {content}
+    </Text>
   );
 }
 
-// Arabic layout is explicit (row-reverse) so it behaves the same on web and native.
+// The Stitch design is laid out left-to-right with bilingual (Arabic + English) strings.
 export function Row({ style, ...rest }: React.ComponentProps<typeof View>) {
-  return <View {...rest} style={[{ flexDirection: 'row-reverse', alignItems: 'center' }, style]} />;
+  const { rowDir } = useLang();
+  return <View {...rest} style={[{ flexDirection: rowDir, alignItems: 'center' }, style]} />;
+}
+
+export function Icon({ name, size = 20, color = colors.text, style }: { name: IconName; size?: number; color?: string; style?: StyleProp<TextStyle> }) {
+  return <MaterialCommunityIcons name={name} size={size} color={color} style={style} />;
 }
 
 // ---------- Press feedback: scale to 0.97, 120ms, ease-out ----------
@@ -67,8 +89,7 @@ export function PressScale({
   accessibilityLabel?: string;
 }) {
   const s = useRef(new Animated.Value(1)).current;
-  const to = (v: number) =>
-    Animated.timing(s, { toValue: v, duration: 120, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+  const to = (v: number) => Animated.timing(s, { toValue: v, duration: 120, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
   return (
     <Pressable
       style={outerStyle}
@@ -84,73 +105,66 @@ export function PressScale({
   );
 }
 
-// ---------- Chips ----------
-type Tone = 'neutral' | 'accent' | 'warning' | 'negative' | 'accentStrong';
-const chipTone: Record<Tone, { bg: string; border: string; ink: string }> = {
-  neutral: { bg: colors.raised, border: colors.border, ink: colors.muted },
-  accent: { bg: colors.accentSoft, border: colors.accentTrack, ink: colors.accentInk },
-  accentStrong: { bg: colors.accentTrack, border: colors.accentTrack, ink: colors.accentInk },
-  warning: { bg: colors.warningSoft, border: colors.warningBorder, ink: colors.warningInk },
-  negative: { bg: colors.negativeSoft, border: colors.negativeBorder, ink: colors.negative },
-};
-export function Chip({ label, tone = 'neutral', size = 12 }: { label: string; tone?: Tone; size?: number }) {
-  const t = chipTone[tone];
+// ---------- Card, pill, eyebrow ----------
+export function Card({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) {
   return (
-    <View
-      style={{
-        backgroundColor: t.bg,
-        borderColor: t.border,
-        borderWidth: 1,
-        borderRadius: radius.chip,
-        paddingHorizontal: 9,
-        paddingVertical: 3,
-      }}
-    >
-      <Txt size={size} weight="medium" color={t.ink} style={{ lineHeight: size + 6 }}>
+    <View style={[{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.card, padding: 16, gap: 12 }, style]}>
+      {children}
+    </View>
+  );
+}
+
+export function Pill({ label, bg = colors.secondaryContainer, ink = colors.primary, face = 'arabic', size = 11 }: { label: string; bg?: string; ink?: string; face?: Face; size?: number }) {
+  const { tr } = useLang();
+  if (tr(label) === '') return null;
+  return (
+    <View style={{ backgroundColor: bg, borderRadius: radius.chip, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' }}>
+      <Txt size={size} weight="bold" face={face} color={ink} style={{ lineHeight: size + 7, textAlign: 'center' }}>
         {label}
       </Txt>
     </View>
   );
 }
 
-// ---------- Card ----------
-export function Card({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) {
+// Section title: Arabic in Arabic mode, English in English mode, with an optional note at the far end.
+export function Eyebrow({ ar, en, note }: { ar: string; en: string; note?: string }) {
+  const { pick } = useLang();
   return (
-    <View
-      style={[
-        {
-          backgroundColor: colors.surface,
-          borderColor: colors.border,
-          borderWidth: 1,
-          borderRadius: radius.card,
-          padding: 16,
-          gap: 12,
-        },
-        style,
-      ]}
-    >
-      {children}
+    <Row style={{ justifyContent: 'space-between', paddingHorizontal: 2 }}>
+      <Txt size={15} weight="bold" color={colors.primary}>
+        {pick(ar, en)}
+      </Txt>
+      {note ? (
+        <Txt size={11} weight="medium" color={colors.secondary}>
+          {note}
+        </Txt>
+      ) : null}
+    </Row>
+  );
+}
+
+export function Bar({ value, color = colors.primaryContainer, track = colors.border }: { value: number; color?: string; track?: string }) {
+  const { rowDir } = useLang();
+  const a = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(a, { toValue: value, duration: 500, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+  }, [value, a]);
+  return (
+    <View style={{ height: 8, borderRadius: 4, backgroundColor: track, overflow: 'hidden', flexDirection: rowDir }}>
+      <Animated.View style={{ height: 8, borderRadius: 4, backgroundColor: color, width: a.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] }) }} />
     </View>
   );
 }
 
 // ---------- Buttons ----------
-export function PrimaryButton({
-  label,
-  icon,
-  onPress,
-  disabled,
-}: {
-  label: string;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
-  onPress?: () => void;
-  disabled?: boolean;
-}) {
+export function Button({ label, icon, onPress, tone = 'primary', disabled }: { label: string; icon?: IconName; onPress?: () => void; tone?: 'primary' | 'light' | 'gold'; disabled?: boolean }) {
+  const bg = tone === 'primary' ? colors.primaryContainer : tone === 'gold' ? colors.gold : colors.raised;
+  const ink = tone === 'primary' ? colors.white : colors.primary;
   return (
-    <PressScale onPress={onPress} disabled={disabled} accessibilityLabel={label} style={styles.primary}>
+    <PressScale onPress={onPress} disabled={disabled} accessibilityLabel={label} style={{ minHeight: 52, borderRadius: radius.control, backgroundColor: bg, justifyContent: 'center', paddingHorizontal: 16 }}>
       <Row style={{ gap: 8, justifyContent: 'center' }}>
-        {icon ? <MaterialCommunityIcons name={icon} size={18} color={colors.white} /> : null}
-        <Txt size={16} weight="bold" color={colors.white}>
+        {icon ? <Icon name={icon} size={20} color={ink} /> : null}
+        <Txt size={14} weight="bold" color={ink}>
           {label}
         </Txt>
       </Row>
@@ -158,180 +172,93 @@ export function PrimaryButton({
   );
 }
 
-export function OutlineButton({
-  label,
-  icon,
-  onPress,
-  disabled,
-}: {
-  label: string;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
-  onPress?: () => void;
-  disabled?: boolean;
-}) {
+// ---------- Headers ----------
+export function BrandMark({ size = 22 }: { size?: number }) {
+  return <Icon name="sprout" size={size} color={colors.primary} />;
+}
+
+export function BrandHeader({ right }: { right?: React.ReactNode }) {
   return (
-    <PressScale onPress={onPress} disabled={disabled} accessibilityLabel={label} style={styles.outline}>
-      <Row style={{ gap: 8, justifyContent: 'center' }}>
-        {icon ? <MaterialCommunityIcons name={icon} size={18} color={colors.accentInk} /> : null}
-        <Txt size={15} weight="semibold" color={colors.accentInk}>
-          {label}
-        </Txt>
+    <Row style={{ height: 64, paddingHorizontal: 16, justifyContent: 'space-between', backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+      <Row style={{ gap: 8 }}>
+        <BrandMark size={26} />
+        <View>
+          <Txt size={20} face="jakartaExtra" color={colors.primary} style={{ lineHeight: 24 }}>
+            OliveWatch AI
+          </Txt>
+        </View>
       </Row>
-    </PressScale>
+      {right}
+    </Row>
   );
 }
 
-// ---------- Progress bar (animates to value, ease-out) ----------
-export function ProgressBar({ value }: { value: number }) {
-  const a = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.timing(a, { toValue: value, duration: 600, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
-  }, [value, a]);
+export function PageHeader({ title, subtitle, onBack, actions }: { title: string; subtitle?: string; onBack?: () => void; actions?: React.ReactNode }) {
+  const { backIcon } = useLang();
   return (
-    <View style={{ height: 6, borderRadius: 3, backgroundColor: colors.accentTrack, overflow: 'hidden', flexDirection: 'row-reverse' }}>
-      <Animated.View
-        style={{
-          height: 6,
-          borderRadius: 3,
-          backgroundColor: colors.accent,
-          width: a.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] }),
-        }}
-      />
-    </View>
+    <Row style={{ minHeight: 64, paddingHorizontal: 12, justifyContent: 'space-between', backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+      <Row style={{ gap: 8, flexShrink: 1 }}>
+        {onBack ? (
+          <PressScale onPress={onBack} accessibilityLabel="رجوع" style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name={backIcon} size={24} color={colors.primary} />
+          </PressScale>
+        ) : null}
+        <View style={{ flexShrink: 1, paddingVertical: 6 }}>
+          <Txt size={17} face="jakarta" color={colors.primary} style={{ lineHeight: 22 }}>
+            {title}
+          </Txt>
+          {subtitle ? (
+            <Txt size={12} color={colors.muted} style={{ lineHeight: 17 }}>
+              {subtitle}
+            </Txt>
+          ) : null}
+        </View>
+      </Row>
+      <Row style={{ gap: 14 }}>{actions}</Row>
+    </Row>
   );
 }
 
-// ---------- Screen shell: 56px header + scroll body, fades in ----------
-export function ScreenShell({
-  title,
-  subtitle,
-  badge = 'بيانات تجريبية',
-  icon,
-  children,
-}: {
-  title: string;
-  subtitle?: string;
-  badge?: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  children: React.ReactNode;
-}) {
+// ---------- Scrolling screen body that fades in over 200ms ----------
+export function Body({ children, pad = 16 }: { children: React.ReactNode; pad?: number }) {
   const fade = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(fade, { toValue: 1, duration: 200, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
   }, [fade]);
   return (
-    <View style={{ flex: 1, backgroundColor: colors.ground }}>
-      <View style={styles.header}>
-        <Row style={{ gap: 8 }}>
-          <MaterialCommunityIcons name={icon} size={20} color={colors.accent} />
-          <View>
-            <Txt size={18} weight="semibold" style={{ lineHeight: 24 }}>
-              {title}
-            </Txt>
-            {subtitle ? (
-              <Txt size={12} weight="medium" color={colors.nav} style={{ lineHeight: 16 }}>
-                {subtitle}
-              </Txt>
-            ) : null}
-          </View>
-        </Row>
-        <Chip label={badge} />
-      </View>
-      <Animated.View style={{ flex: 1, opacity: fade }}>
-        <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 24, gap: 16 }}>{children}</ScrollView>
-      </Animated.View>
-    </View>
+    <Animated.View style={{ flex: 1, opacity: fade }}>
+      <ScrollView contentContainerStyle={{ padding: pad, paddingBottom: 32, gap: 16 }}>{children}</ScrollView>
+    </Animated.View>
   );
 }
 
-// ---------- Line chart: single series, 5 faint gridlines, today marker ----------
-export function LineChart({ values, todayLabel }: { values: number[]; todayLabel: string }) {
+export function Screen({ children }: { children: React.ReactNode }) {
+  return <View style={{ flex: 1, backgroundColor: colors.ground }}>{children}</View>;
+}
+
+// ---------- Slider: tap or drag on the track; the thumb follows (works on web and native) ----------
+export function Slider({ value, min, max, step = 1, onChange }: { value: number; min: number; max: number; step?: number; onChange: (v: number) => void }) {
+  const { rtl } = useLang();
   const [w, setW] = useState(0);
-  const H = 140;
-  const padL = 30; // room for y labels (on the left, numbers stay LTR)
-  const padR = 12;
-  const onLayout = (e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width);
-  const plotW = Math.max(0, w - padL - padR);
-  const y = (v: number) => 8 + (1 - v / 100) * (H - 16);
-  const x = (i: number) => padL + (i / (values.length - 1)) * plotW;
-  const pts = values.map((v, i) => `${x(i)},${y(v)}`).join(' ');
-  const last = values.length - 1;
+  const pct = (value - min) / (max - min);
+  const set = (e: GestureResponderEvent) => {
+    if (!w) return;
+    const x = Math.min(1, Math.max(0, e.nativeEvent.locationX / w));
+    const t = rtl ? 1 - x : x;
+    const raw = min + t * (max - min);
+    onChange(Math.round(raw / step) * step);
+  };
   return (
-    <View onLayout={onLayout} style={{ height: H }}>
-      {w > 0 ? (
-        <>
-          <Svg width={w} height={H}>
-            {[0, 25, 50, 75, 100].map((g) => (
-              <Line key={g} x1={padL} x2={w - padR} y1={y(g)} y2={y(g)} stroke={colors.border} strokeWidth={1} />
-            ))}
-            <Line x1={x(last)} x2={x(last)} y1={8} y2={H - 8} stroke={colors.accent} strokeWidth={1} />
-            <Polyline points={pts} fill="none" stroke={colors.accent} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-            <Circle cx={x(last)} cy={y(values[last])} r={4} fill={colors.accent} />
-          </Svg>
-          {[0, 25, 50, 75, 100].map((g) => (
-            <Text
-              key={g}
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: y(g) - 8,
-                width: padL - 6,
-                textAlign: 'right',
-                fontFamily: fonts.regular,
-                fontSize: 11,
-                color: colors.muted,
-              }}
-            >
-              {g}
-            </Text>
-          ))}
-          <View
-            style={{
-              position: 'absolute',
-              left: Math.max(padL, x(last) - 92),
-              top: 4,
-              backgroundColor: colors.surface,
-              borderColor: colors.border,
-              borderWidth: 1,
-              borderRadius: radius.chip,
-              paddingHorizontal: 6,
-              paddingVertical: 1,
-            }}
-          >
-            <Txt size={11} weight="bold" style={{ lineHeight: 16 }}>
-              {todayLabel}
-            </Txt>
-          </View>
-        </>
-      ) : null}
+    <View
+      onLayout={(e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width)}
+      onStartShouldSetResponder={() => true}
+      onMoveShouldSetResponder={() => true}
+      onResponderGrant={set}
+      onResponderMove={set}
+      style={{ height: 32, justifyContent: 'center' }}
+    >
+      <View style={{ height: 8, borderRadius: 4, backgroundColor: colors.border }} />
+      <View style={{ position: 'absolute', [rtl ? 'right' : 'left']: pct * (w - 22), top: 5, width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primaryContainer, borderWidth: 3, borderColor: colors.white }} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    height: 56,
-    paddingHorizontal: 16,
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.ground,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  primary: {
-    height: 48,
-    borderRadius: radius.chip,
-    backgroundColor: colors.accent,
-    justifyContent: 'center',
-  },
-  outline: {
-    minHeight: 48,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.accent,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    paddingHorizontal: 12,
-  },
-});

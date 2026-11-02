@@ -8,6 +8,9 @@ import {
   IBMPlexSansArabic_600SemiBold,
   IBMPlexSansArabic_700Bold,
 } from '@expo-google-fonts/ibm-plex-sans-arabic';
+import { PlusJakartaSans_500Medium, PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans';
+import { SpaceGrotesk_500Medium, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
+import { LangProvider } from '../i18n';
 import { colors } from '../theme';
 
 // Layouts are written explicitly right-to-left (row-reverse), so the platform
@@ -21,12 +24,17 @@ export default function RootLayout() {
     IBMPlexSansArabic_500Medium,
     IBMPlexSansArabic_600SemiBold,
     IBMPlexSansArabic_700Bold,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_700Bold,
   });
   if (!loaded) return <View style={{ flex: 1, backgroundColor: colors.ground }} />;
   return (
-    <>
+    <LangProvider>
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.ground } }} />
-    </>
+    </LangProvider>
   );
 }

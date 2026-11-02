@@ -11,6 +11,7 @@ export type PlotStatus = 'healthy' | 'needs_check';
 export type Plot = {
   id: string;
   name: string;
+  nameEn?: string;
   trees: number;
   status: PlotStatus;
   lastCheck: string; // ready-to-show Arabic text
@@ -21,9 +22,13 @@ export type Plot = {
 export type Farm = {
   id: string;
   name: string;
+  nameEn?: string;
+  location?: string;
+  locationEn?: string;
   areaDunum: number;
   trees: number;
   varieties: string;
+  health?: number; // 0..100 overall grove condition
 };
 
 export type Climate = {

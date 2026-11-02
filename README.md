@@ -53,7 +53,8 @@ data: ...")`; the dashboard also shows a visible banner and refuses to save).
 
 ## Honesty rules
 
-- No invented statistics, customers, testimonials or certifications. Everything not real carries a source chip:
+- **Mobile exception:** at the owner's request the mobile screens copy the Stitch design and show no sample-data labels; much of their copy (Official Seal, certified grade, lab values, treatment plan, blockchain wording) is placeholder, not real. Do not show it as real to farmers, buyers or certifiers.
+- On platform/ and landing/: no invented statistics, customers, testimonials or certifications. Everything not real carries a source chip:
   "حقيقية" (real) / "تجريبية" (sample) / "محاكاة" (simulated). Today nothing is real.
 - Oil screening is a preliminary screening, never a quality certificate. Below 60% confidence it says
   "يحتاج تحقق مخبري" and names no class.

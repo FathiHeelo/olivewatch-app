@@ -195,7 +195,7 @@ export default function Home() {
             { label: 'Scan Leaf AI', icon: 'camera' as IconName, to: '/scan', gold: true },
             { label: 'UV Oil Scan', icon: 'flask-outline' as IconName, to: '/oil' },
             { label: 'Satellite NDVI', icon: 'satellite-variant' as IconName, to: '/climate' },
-            { label: 'Ask AI Murshid', icon: 'head-cog-outline' as IconName, to: '/diagnosis' },
+            { label: 'Ask AI Murshid', icon: 'head-cog-outline' as IconName, to: '/advisor' },
             { label: 'Trace Batch QR', icon: 'qrcode-scan' as IconName, to: '/passport' },
           ]).map((t) => (
             <PressScale
@@ -255,7 +255,22 @@ export default function Home() {
             <Icon name="qrcode" size={30} color={colors.primaryContainer} />
           </Row>
         </PressScale>
+        {/* room so the floating button never covers the last card */}
+        <View style={{ height: 96 }} />
       </Body>
+
+      {/* Floating "Ask the AI advisor" circle: stays on screen while the page scrolls */}
+      <PressScale
+        onPress={() => router.push('/advisor')}
+        accessibilityLabel={pick('اسأل المرشد الذكي', 'Ask the AI advisor')}
+        outerStyle={{ position: 'absolute', bottom: 16, [rtl ? 'left' : 'right']: 16 }}
+        style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: colors.primaryContainer, borderWidth: 3, borderColor: colors.gold, alignItems: 'center', justifyContent: 'center', gap: 2, paddingHorizontal: 8, shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}
+      >
+        <Icon name="head-cog-outline" size={26} color={colors.gold} />
+        <Txt size={14} weight="bold" color={colors.white} style={{ textAlign: 'center', lineHeight: 16 }}>
+          {pick('اسأل المرشد الذكي', 'Ask AI Advisor')}
+        </Txt>
+      </PressScale>
     </Screen>
   );
 }

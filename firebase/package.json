@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Firestore seed + check scripts for OliveWatch AI",
+  "description": "Realtime Database seed + check scripts for OliveWatch AI",
   "scripts": {
     "seed": "node seed.mjs",
     "check": "node check.mjs"

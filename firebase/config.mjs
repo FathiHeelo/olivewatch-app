@@ -1,64 +1,67 @@
 // Same project as mobile/src/firebase.ts, platform/src/firebase.ts, landing/src/firebase.ts.
-// A web projectId is an identifier, not a secret; Firestore security rules are the protection.
+// These values are project identifiers, not secrets; Realtime Database rules are the protection.
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 
-export const firebaseConfig = { projectId: 'olivewatch-ai' };
+export const firebaseConfig = {
+  apiKey: 'AIzaSyBCYRSt3TAhlApo680gixvsVn1LSV5Uzu4',
+  authDomain: 'olivewatch-ai.firebaseapp.com',
+  databaseURL: 'https://olivewatch-ai-default-rtdb.firebaseio.com',
+  projectId: 'olivewatch-ai',
+  storageBucket: 'olivewatch-ai.firebasestorage.app',
+  messagingSenderId: '212803003223',
+  appId: '1:212803003223:web:ef680d9643a492973cd412',
+};
 
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = getDatabase(app);
 
-// Collections this project owns, in the order they are seeded.
-export const COLLECTIONS = ['farms', 'plots', 'climate', 'mills', 'suppliers', 'batches', 'samples'];
+// Top-level nodes of the tree, in the order they are seeded.
+export const NODES = ['farms', 'plots', 'climate', 'mills', 'suppliers', 'batches', 'samples'];
 
-// Turn a Firestore error into the exact thing the user must do.
+const CONSOLE_HELP = [
+  'Firebase console > Build > Realtime Database.',
+  '  - If there is no database: Create Database > pick a location > Start in TEST MODE > Enable.',
+  '  - If it exists: Rules tab > set  { "rules": { ".read": true, ".write": true } }  > Publish (demo only).',
+  'This script never deploys rules.',
+].join('\n');
+
+// Turn an error into the exact thing the user must do.
 export function explain(err) {
   const msg = String(err?.message ?? err);
-  if (err?.code === 'permission-denied' || /PERMISSION_DENIED|Missing or insufficient/i.test(msg)) {
-    return [
-      'Firestore refused the request (permission-denied).',
-      'Firebase console > Build > Firestore Database > Rules: the demo rules must allow reads/writes',
-      '(test mode: "allow read, write: if request.time < timestamp.date(...)" with a date in the future).',
-      'Rules are NOT deployed by this script. See firebase/firestore.rules.',
-    ].join('\n');
+  if (/PERMISSION_DENIED|Permission denied|\b401\b|\b403\b/i.test(msg)) {
+    return 'Realtime Database rules deny this request (permission denied).\n' + CONSOLE_HELP;
   }
-  if (/has not been used|is disabled|SERVICE_DISABLED|not found|NOT_FOUND|offline|unavailable/i.test(msg)) {
-    return [
-      'Firestore does not exist / is unreachable for project olivewatch-ai.',
-      'Firebase console > Build > Firestore Database > Create database > choose "Start in test mode" > pick a location > Enable.',
-      'If the console says the API is disabled, enable "Cloud Firestore API" in Google Cloud for olivewatch-ai.',
-    ].join('\n');
+  if (/\b404\b|not exist|not found/i.test(msg)) {
+    return 'The Realtime Database instance olivewatch-ai-default-rtdb does not exist (404).\n' + CONSOLE_HELP;
   }
   return msg;
 }
 
-// Fast, honest connectivity test over REST (no SDK retry loop): 200 = ok, 404 = database not created,
-// 403 = API disabled or rules deny. Throws an Error whose message the caller passes to explain().
+// Fast, honest connectivity test over REST (no SDK retry loop), 10 second timeout.
+// 200 = ok (body "null" = empty), 401 = rules deny, 404 = instance does not exist.
 export async function preflight() {
-  const url = 'https://firestore.googleapis.com/v1/projects/' + firebaseConfig.projectId + '/databases/(default)/documents/farms?pageSize=1';
+  const url = `${firebaseConfig.databaseURL}/.json?shallow=true`;
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), 10000);
   try {
     const res = await fetch(url, { signal: ctl.signal });
-    if (res.ok) return;
     const body = await res.text();
-    const e = new Error('REST ' + res.status + ': ' + body.slice(0, 300));
-    e.code = res.status === 403 && !/SERVICE_DISABLED/.test(body) ? 'permission-denied' : 'unavailable';
-    throw e;
+    if (!res.ok) throw new Error(`REST ${res.status}: ${body.slice(0, 200)}`);
+    return body === 'null' ? 'empty' : 'has data';
   } catch (err) {
-    if (err.name === 'AbortError') throw new Error('offline: no response from Firestore in 10s');
+    if (err.name === 'AbortError') throw new Error('offline: no response from Realtime Database in 10s');
     throw err;
   } finally {
     clearTimeout(t);
   }
 }
 
-// Never hang forever: the SDK retries quietly when the backend is unreachable.
-// Promise.race against a 10 second timer; the scripts then print the error and process.exit(1).
+// Promise.race against a 10 second timer; callers print the error and process.exit(1).
 export function withTimeout(promise, ms = 10000) {
   let timer;
   const timeout = new Promise((_, rej) => {
-    timer = setTimeout(() => rej(new Error(`offline: no response from Firestore in ${ms / 1000}s (database missing, API disabled, or rules deny)`)), ms);
+    timer = setTimeout(() => rej(new Error(`timeout: no response from Realtime Database in ${ms / 1000}s (rules deny writes, or offline)`)), ms);
   });
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }

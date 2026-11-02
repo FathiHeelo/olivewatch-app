@@ -1,14 +1,16 @@
-// Reads every collection and prints document counts.
-import { collection, getDocsFromServer } from 'firebase/firestore';
-import { COLLECTIONS, db, explain, preflight, withTimeout } from './config.mjs';
+// Reads every top-level node with get(ref(db, path)) and prints record counts.
+import { get, ref } from 'firebase/database';
+import { NODES, db, explain, preflight, withTimeout } from './config.mjs';
 
 try {
-  await preflight(); // fails fast with the real reason (404 / 403) instead of reporting an empty cache as 0 docs
+  const state = await preflight();
+  console.log(`preflight ok (database: ${state})`);
   let total = 0;
-  for (const col of COLLECTIONS) {
-    const snap = await withTimeout(getDocsFromServer(collection(db, col)));
-    total += snap.size;
-    console.log(`${col.padEnd(10)} ${snap.size}  [${snap.docs.map((d) => d.id).join(', ')}]`);
+  for (const node of NODES) {
+    const snap = await withTimeout(get(ref(db, node)));
+    const ids = snap.exists() ? Object.keys(snap.val()) : [];
+    total += ids.length;
+    console.log(`${node.padEnd(10)} ${ids.length}  [${ids.join(', ')}]`);
   }
   console.log(`total      ${total}`);
   process.exit(0);

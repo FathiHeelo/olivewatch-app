@@ -3,8 +3,7 @@
 // notes are added by CODE, not by the model.
 import type { Request, Response } from 'express';
 import { FEATURES } from '../ai/config.js';
-import { deepGlossary } from '../ai/glossary.js';
-import { DATA_SOURCE, foreignNumbers } from '../ai/postprocess.js';
+import { DATA_SOURCE, deepNormalize, foreignNumbers } from '../ai/postprocess.js';
 import { AiUnavailable, parseJson, runFeature } from '../ai/run.js';
 import { traceRequest, traceSchema } from '../ai/schemas.js';
 import { badRequest, internal, sendUnavailable } from './respond.js';
@@ -32,7 +31,7 @@ export async function trace(req: Request, res: Response) {
       },
     );
     const notes = [NOTES.qr[lang], ...('screening' in batch && batch.screening ? [NOTES.screening[lang]] : [])];
-    return res.json({ ...deepGlossary(r.data, lang), notes, data_source: DATA_SOURCE, model: r.model, used_fallback: r.usedFallback });
+    return res.json({ ...deepNormalize(r.data, lang), notes, data_source: DATA_SOURCE, model: r.model, used_fallback: r.usedFallback });
   } catch (e) {
     if (e instanceof AiUnavailable) return sendUnavailable(res, e);
     return internal(res, e);

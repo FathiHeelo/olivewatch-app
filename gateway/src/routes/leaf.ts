@@ -2,8 +2,7 @@
 // { label, confidence, quality, rejected, reason?, data_source: "gemini" }
 import type { Request, Response } from 'express';
 import { FEATURES } from '../ai/config.js';
-import { applyGlossary } from '../ai/glossary.js';
-import { finishLeaf, leafUnclear, checkImage } from '../ai/postprocess.js';
+import { finishLeaf, leafUnclear, checkImage, normalizeText } from '../ai/postprocess.js';
 import { AiUnavailable, parseJson, runFeature } from '../ai/run.js';
 import { leafSchema, imageRequest } from '../ai/schemas.js';
 import { badRequest, internal, sendUnavailable } from './respond.js';
@@ -22,7 +21,7 @@ export async function leaf(req: Request, res: Response) {
       [{ role: 'user', parts: [{ inlineData: { mimeType, data: imageBase64.replace(/^data:[^,]+,/, '') } }, { text: 'Classify this olive leaf photo.' }] }],
       (t) => parseJson(t, leafSchema),
     );
-    return res.json({ ...finishLeaf(r.data, lang), reason_text: r.data.reason ? applyGlossary(r.data.reason, lang) : undefined, model: r.model, used_fallback: r.usedFallback });
+    return res.json({ ...finishLeaf(r.data, lang), reason_text: r.data.reason ? normalizeText(r.data.reason, lang) : undefined, model: r.model, used_fallback: r.usedFallback });
   } catch (e) {
     // Invalid model output must never produce a confident label: fall to the "unclear image, retake" state.
     if (e instanceof AiUnavailable && e.reason === 'invalid_output') return res.json({ ...leafUnclear(lang), model: null });

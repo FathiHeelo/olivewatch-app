@@ -4,8 +4,7 @@
 import type { Request, Response } from 'express';
 import { FEATURES } from '../ai/config.js';
 import type { Content } from '../ai/gemini.js';
-import { applyGlossary } from '../ai/glossary.js';
-import { DATA_SOURCE } from '../ai/postprocess.js';
+import { DATA_SOURCE, normalizeText } from '../ai/postprocess.js';
 import { AiUnavailable, runFeature } from '../ai/run.js';
 import { advisorRequest } from '../ai/schemas.js';
 import { badRequest, internal, sendUnavailable } from './respond.js';
@@ -35,7 +34,7 @@ export async function advisor(req: Request, res: Response) {
     const r = await runFeature(cfg, lang, contents, (t) => {
       const text = t.trim();
       if (!text) throw new Error('empty reply');
-      return applyGlossary(text, lang);
+      return normalizeText(text, lang);
     });
     return res.json({ reply: r.data, lang, data_source: DATA_SOURCE, model: r.model, used_fallback: r.usedFallback });
   } catch (e) {

@@ -118,6 +118,16 @@ scenario('blocked');
 r = await post(PORT, '/ai/advisor', { lang: 'en', messages: [{ role: 'user', text: 'hello' }] });
 check(r.status === 422 && r.json?.error === 'blocked', `safety block => 422 blocked (got ${r.status})`);
 
+
+// 7b) the Climate Stress Index is a 0-100 score, never a percentage ---------------------------------------------------
+console.log('\n[7b] CSI is not a percentage');
+scenario('csi-percent-en');
+r = await post(PORT, '/ai/advisor', { lang: 'en', messages: [{ role: 'user', text: 'hello' }] });
+check(/46\.7 out of 100/.test(r.json?.reply ?? '') && !/46\.7\s*%/.test(r.json?.reply ?? ''), `English: "CSI is 46.7%" becomes "46.7 out of 100" (${r.json?.reply})`);
+scenario('csi-percent-ar');
+r = await post(PORT, '/ai/advisor', { lang: 'ar', messages: [{ role: 'user', text: 'مرحبا' }] });
+check(/46\.7 من 100/.test(r.json?.reply ?? '') && !/46\.7\s*[٪%]/.test(r.json?.reply ?? '') && /CSI \(سي إس آي\)|مؤشر الإجهاد المناخي/.test(r.json?.reply ?? ''), `Arabic: "46.7٪" becomes "46.7 من 100" (${r.json?.reply})`);
+
 stub.close();
 stop(gw);
 

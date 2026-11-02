@@ -1,6 +1,7 @@
 // Rules that are enforced in code, not in the prompt.
 import type { z } from 'zod';
 import { FEATURES } from './config.js';
+import { applyGlossary } from './glossary.js';
 import type { leafSchema, oilSchema } from './schemas.js';
 
 export const DATA_SOURCE = 'gemini' as const;
@@ -78,4 +79,26 @@ export function checkImage(base64: string, mime: string): { ok: true; bytes: num
   if (buf.length > MAX_IMAGE_BYTES) return { ok: false, status: 413, error: 'image_too_large' };
   if (!SIGNATURES[mime]?.(buf)) return { ok: false, status: 415, error: 'unsupported_or_corrupt_image' };
   return { ok: true, bytes: buf.length };
+}
+
+// ---- text normalisation (code-enforced) -----------------------------------------------------------------------
+// The Climate Stress Index is a 0-100 score, never a percentage. Models sometimes write "CSI 46.7%": rewrite it.
+const CSI_MENTION = '(?:CSI|Climate Stress Index|مؤشر الإجهاد المناخي)(?:\\s*\\([^)]*\\))?';
+const CSI_PERCENT = new RegExp(`(${CSI_MENTION}[^.\\n\\d]{0,60}?)(\\d+(?:\\.\\d+)?)\\s*(?:%|٪|percent|per cent|بالمئة|بالمائة|في المئة|في المائة)`, 'gi');
+
+export function fixCsiPercent(text: string, lang: 'ar' | 'en'): string {
+  return text.replace(CSI_PERCENT, (_m, pre: string, n: string) => `${pre}${n}${lang === 'ar' ? ' من 100' : ' out of 100'}`);
+}
+
+/** CSI-percent fix, then the Arabic scientific-term glossary. Applied to every text the model writes. */
+export const normalizeText = (text: string, lang: 'ar' | 'en') => applyGlossary(fixCsiPercent(text, lang), lang);
+
+export function deepNormalize<T>(value: T, lang: 'ar' | 'en'): T {
+  const walk = (v: unknown): unknown => {
+    if (typeof v === 'string') return normalizeText(v, lang);
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, walk(x)]));
+    return v;
+  };
+  return walk(value) as T;
 }

@@ -11,6 +11,9 @@ import { leaf } from './routes/leaf.js';
 import { oil } from './routes/oil.js';
 import { trace } from './routes/trace.js';
 
+// localhost and the private IPv4 ranges (10/8, 172.16/12, 192.168/16), any port.
+const PRIVATE_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?$/;
+
 const app = express();
 app.disable('x-powered-by');
 
@@ -18,7 +21,7 @@ app.disable('x-powered-by');
 app.use(
   cors({
     origin(origin, cb) {
-      if (!origin || env.allowedOrigins.includes(origin)) return cb(null, true);
+      if (!origin || env.allowedOrigins.includes(origin) || (env.allowLanOrigins && PRIVATE_ORIGIN.test(origin))) return cb(null, true);
       cb(new Error('origin_not_allowed'));
     },
   }),
@@ -65,6 +68,7 @@ app.use((err: Error & { status?: number; type?: string }, _req: Request, res: Re
 
 const server = app.listen(env.port, () => {
   console.log(`[gateway] listening on :${env.port}`);
+  console.log(`[gateway] LAN origins: ${env.allowLanOrigins ? 'allowed (ALLOW_LAN_ORIGINS=true)' : 'off'}`);
   console.log(`[gateway] origins: ${env.allowedOrigins.join(', ') || '(none)'} | rate limit ${env.rateLimitPerMinute}/min | body max ${env.maxBodyMb} MB`);
   for (const f of Object.values(FEATURES)) console.log(`[gateway] ${f.route.padEnd(13)} ${f.model} -> ${f.fallbackModel}`);
 });

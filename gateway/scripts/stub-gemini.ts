@@ -12,7 +12,9 @@ export type Scenario =
   | 'poor-quality' // leaf: confidence 0.95 but quality "poor"
   | 'foreign-numbers' // text features: an invented number in the output
   | 'server-error' // every model: 500
-  | 'blocked'; // prompt blocked by safety
+  | 'blocked' // prompt blocked by safety
+  | 'csi-percent-en' // advisor text that writes the CSI as a percentage (English)
+  | 'csi-percent-ar'; // ... (Arabic)
 
 export type Call = { model: string; scenario: Scenario };
 
@@ -80,6 +82,10 @@ export function startStub(port: number) {
           return ok(res, valid(schema, false, false, true));
         case 'server-error':
           return err(res, 500, 'INTERNAL');
+        case 'csi-percent-en':
+          return ok(res, 'The CSI is 46.7% today, so the grove is under medium stress.');
+        case 'csi-percent-ar':
+          return ok(res, 'مؤشر الإجهاد المناخي 46.7٪ اليوم، ولذلك تتعرض البيارة لإجهاد متوسط.');
         case 'blocked':
           res.writeHead(200, { 'Content-Type': 'application/json' });
           return void res.end(JSON.stringify({ promptFeedback: { blockReason: 'SAFETY' } }));

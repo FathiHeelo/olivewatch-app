@@ -18,11 +18,38 @@ Never use an `EXPO_PUBLIC_` / `VITE_` variable for the key: those are bundled in
 | `GEMINI_API_KEY` | required | read only from the environment at startup |
 | `PORT` | 8787 | |
 | `ALLOWED_ORIGINS` | none | comma-separated CORS allow-list (requests without an Origin, e.g. curl / native app, are allowed) |
+| `ALLOW_LAN_ORIGINS` | false | `true` also accepts browser origins on private LAN addresses (10.x, 172.16-31.x, 192.168.x, localhost) so the Expo **web** build opened from a phone browser can call the gateway. Not needed for Expo Go (a native app sends no Origin) |
 | `RATE_LIMIT_PER_MINUTE` | 30 | per-IP limit on `/ai/*` (separate from Gemini's own free-tier quota) |
 | `MAX_BODY_MB` | 5 | max request body (images are sent as base64, so about 3.7 MB of picture) |
 
 Client side: `EXPO_PUBLIC_AI_URL` (mobile), `VITE_AI_URL` (platform, landing). If unset, or the gateway is unreachable, the
 apps fall back to their mock and label it simulated (`محاكاة` / `Simulated`).
+
+## Testing on a real phone (Expo Go) over Wi-Fi
+
+The gateway listens on every network interface already (`app.listen(port)`, no host), so no code change is needed.
+
+1. Phone and computer on the **same Wi-Fi** (not a guest network with client isolation).
+2. Find the computer's LAN address: `ipconfig` (Windows, the IPv4 address of the Wi-Fi adapter, e.g. `192.168.1.20`).
+3. Windows Firewall: allow inbound TCP on the gateway port and on Metro. In an **Administrator** PowerShell:
+
+       New-NetFirewallRule -DisplayName "OliveWatch gateway 8787" -Direction Inbound -Protocol TCP -LocalPort 8787 -Action Allow -Profile Private
+       New-NetFirewallRule -DisplayName "OliveWatch Metro 8081"   -Direction Inbound -Protocol TCP -LocalPort 8081 -Action Allow -Profile Private
+
+   Run `Get-NetConnectionProfile`: the rules above apply only if your Wi-Fi is **Private**. If it says `Public`, either
+   switch it (`Set-NetConnectionProfile -InterfaceAlias "<Wi-Fi alias>" -NetworkCategory Private`) or use
+   `-Profile Public` in the rules for the duration of the test. Remove them afterwards:
+   `Remove-NetFirewallRule -DisplayName "OliveWatch*"`.
+4. Start the gateway: `cd gateway && npm run dev`. Check from the phone's browser: `http://192.168.1.20:8787/health`
+   must answer `{"ok":true,...}`.
+5. Point the app at it: in `mobile/.env.local` set `EXPO_PUBLIC_AI_URL=http://192.168.1.20:8787`, then restart Expo with
+   the cache cleared: `cd mobile && npx expo start -c`. (`EXPO_PUBLIC_*` values are baked in when Metro bundles.)
+6. Open Expo Go on the phone (it must support the project's SDK) and scan the QR code.
+
+CORS: Expo Go is a native app and sends no `Origin` header, so CORS does not apply and `ALLOWED_ORIGINS` needs nothing.
+Only if you open the Expo **web** build in a phone browser (`http://192.168.1.20:8081`) set `ALLOW_LAN_ORIGINS=true` in
+`gateway/.env` (or add that exact origin to `ALLOWED_ORIGINS`). Do not set it on a gateway exposed to the internet.
+The `/ai/*` per-IP rate limit counts the phone's address separately from the computer's.
 
 ## Routes
 

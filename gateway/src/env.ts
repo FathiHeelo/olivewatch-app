@@ -24,6 +24,9 @@ export const env = {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean),
+  // Development aid for testing from a phone / another computer: also accept browser origins on private LAN
+  // addresses (10.x, 172.16-31.x, 192.168.x) and localhost. Leave off in production.
+  allowLanOrigins: process.env.ALLOW_LAN_ORIGINS === 'true',
   rateLimitPerMinute: num(process.env.RATE_LIMIT_PER_MINUTE, 30),
   maxBodyMb: num(process.env.MAX_BODY_MB, 5),
   // Test hooks only: point the Gemini client at a stub server. Never set in production.

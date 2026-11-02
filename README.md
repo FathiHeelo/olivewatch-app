@@ -1,48 +1,55 @@
 # OliveWatch AI (أوليف ووتش)
 
 OliveWatch AI follows Palestinian olive groves from tree to oil: leaf disease check, climate stress index,
-oil screening, traceability. UI language is Arabic, RTL. This is a hackathon demo.
-
-## Status
-
-| Part | State |
-|---|---|
-| `mobile/` Expo app (4 screens) | Working, runs on sample data |
-| `firebase/` seed + check scripts, rules | Written. **Not yet run**: Cloud Firestore is not enabled for `olivewatch-ai` |
-| `platform/` web dashboard for olive mills | Not built yet |
-| `landing/` marketing site | Not built yet |
+oil screening, traceability. UI language is Arabic, RTL. This is a hackathon demo: **nothing in it is real data**.
 
 ## Folder map
 
     mobile/     Expo SDK 58 + Expo Router app (farmer side)
-    firebase/   Firestore seed data, seed.mjs, check.mjs, firestore.rules (demo rules, not deployed)
-    platform/   (planned) Vite + React + TypeScript dashboard for mills
-    landing/    (planned) Vite + React + TypeScript single-page site
+    platform/   Vite + React + TypeScript dashboard for olive mills (port 5174)
+    landing/    Vite + React + TypeScript single-page marketing site (port 5175)
+    firebase/   Realtime Database seed data, seed.mjs, check.mjs, demo rules file (not deployed)
 
-Each part is independent: its own `package.json`, dependencies and scripts.
+Each part is independent: its own `package.json`, README, dev script and build script.
 
 ## Run
 
-    # mobile
-    cd mobile && npm install && npx expo start      # press w for web
+    # 1. database (once)
+    cd firebase && npm install && npm run seed && npm run check
 
-    # firebase (needs Firestore created first, see below)
-    cd firebase && npm install
-    npm run seed      # idempotent: setDoc with fixed ids
-    npm run check     # prints document counts per collection
+    # 2. each part
+    cd mobile   && npm install && npx expo start        # press w for web
+    cd platform && npm install && npm run dev            # http://localhost:5174
+    cd landing  && npm install && npm run dev            # http://localhost:5175
 
-## Firebase setup
+    # checks
+    npm run typecheck && npm run build                   # in platform/ and landing/
+    npx tsc --noEmit                                     # in mobile/
+    npm run test:csi                                     # in landing/
 
-Project id: `olivewatch-ai`. The web config is an identifier, not a secret; Firestore security rules are the
-protection.
+## Firebase setup (Realtime Database, not Firestore)
 
-1. Firebase console > Build > Firestore Database > **Create database** > **(default)** > **Start in test mode**.
-2. `cd firebase && npm run seed && npm run check`.
-3. `firebase/firestore.rules` is demo-only (test-mode style, expires). It is not deployed by this repo.
-   Do not collect personal data while test-mode rules are on: everything is world-readable.
+Project `olivewatch-ai`, instance `https://olivewatch-ai-default-rtdb.firebaseio.com`. The web config is in
+`src/firebase.ts` of each app; these are project identifiers, not secrets. The database rules are the protection.
 
-Seed sources: `mobile/src/data/seed.json` (farms, plots, climate; also the app's offline fallback) and
-`firebase/mill-data.json` (mills, suppliers, batches, samples).
+1. Firebase console > Build > Realtime Database > Create Database > **test mode**.
+2. Rules tab: `{ "rules": { ".read": true, ".write": true } }` for the demo (see `firebase/database.rules.json`).
+   This repo never deploys rules. Open rules mean anything stored is world-readable and writable: keep personal
+   data out until the rules are locked down.
+3. `cd firebase && npm run seed` writes the whole tree idempotently (`update()` with fixed ids).
+
+Tree: `/farms/farm-east`, `/plots/{p1,p2,p3}`, `/climate/latest` (inputs only), `/mills/{id}`, `/suppliers/{id}`,
+`/batches/{id}`, `/samples/{id}`. Sources: `mobile/src/data/seed.json` and `firebase/mill-data.json`.
+Realtime Database drops `null`, so a missing value is an omitted field and the UI shows a grey dash.
+
+Both `seed.mjs` and `check.mjs` first run a REST preflight (`/.json?shallow=true`, 10 s timeout): 401 = rules deny,
+404 = instance does not exist, and print what to click.
+
+## How the apps stay live
+
+`mobile/` and `platform/` read with `onValue` subscriptions, so changes show without a reload. If the database does
+not answer within 5 s they show the bundled sample data and say so (`console.warn("[OliveWatch] using local sample
+data: ...")`; the dashboard also shows a visible banner and refuses to save).
 
 ## Honesty rules
 
@@ -54,4 +61,6 @@ Seed sources: `mobile/src/data/seed.json` (farms, plots, climate; also the app's
 - Leaf check is preliminary, not a final diagnosis; the app gives no treatment advice.
 - Climate Stress Index: `CSI = 100*(0.4*min(dT/4,1) + 0.4*min(-dP/40,1) + 0.2*min(d/30,1))`.
   Example `(2, -20, 10) -> 46.7`. It is always recomputed in code, never stored.
-- KPIs are computed from the batch records. Note: the sample batches add up to 907 L of oil, not 1,237 L.
+- KPIs are computed from the batch records: with the seed data 5 batches, 6,390 kg olives, **907 L** oil (the batch
+  that is not pressed yet has no oil value), 4 of 5 samples screened, 1 needs a lab check.
+- There is no pilot sign-up form: with open demo rules, collected emails would be public.

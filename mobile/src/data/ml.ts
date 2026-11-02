@@ -1,19 +1,23 @@
-// Calls to the ML service (FastAPI from the ML Build Plan). If EXPO_PUBLIC_ML_URL is not
-// set, or the call fails, a deterministic mock answers and is labelled "محاكاة".
+// Leaf / oil screening. Priority order: (1) the AI gateway (EXPO_PUBLIC_AI_URL, Gemini, labelled "Gemini · فحص أولي"),
+// (2) the FastAPI ML service (EXPO_PUBLIC_ML_URL), (3) a deterministic mock labelled "محاكاة".
+import { aiLeaf, aiOil } from './aiClient';
 import type { Source } from './repository';
+
+// 'gemini' = a Gemini preliminary screening (not a trained classifier, never "real").
+export type MlSource = Source | 'gemini';
 
 const ML_URL = process.env.EXPO_PUBLIC_ML_URL;
 
 export type LeafLabel = 'healthy' | 'peacock_spot' | 'aculus_olearius';
 
 export type LeafResult =
-  | { kind: 'ok'; label: LeafLabel; confidence: number; quality: 'good' | 'acceptable'; source: Source }
-  | { kind: 'rejected'; reason: 'blur' | 'low_confidence'; source: Source };
+  | { kind: 'ok'; label: LeafLabel; confidence: number; quality: 'good' | 'acceptable'; source: MlSource }
+  | { kind: 'rejected'; reason: 'blur' | 'low_confidence'; source: MlSource };
 
 export type OilClass = 'reference' | 'anomalous' | 'adulteration_indicator';
 export type OilResult =
-  | { kind: 'class'; label: OilClass; confidence: number; source: Source }
-  | { kind: 'lab'; confidence: number; source: Source };
+  | { kind: 'class'; label: OilClass; confidence: number; source: MlSource }
+  | { kind: 'lab'; confidence: number; source: MlSource };
 
 // Confidence floors from the ML plan.
 export const LEAF_CONFIDENCE_FLOOR = 0.7;
@@ -25,7 +29,14 @@ function hash(s: string) {
   return h;
 }
 
-export async function predictLeaf(uri: string): Promise<LeafResult> {
+export async function predictLeaf(uri: string, lang: 'ar' | 'en' = 'ar'): Promise<LeafResult> {
+  // 1) AI gateway. Confidence < 0.70 and poor quality are already turned into "rejected" by the gateway.
+  const ai = await aiLeaf(uri, lang);
+  if (ai.ok) {
+    if (ai.data.rejected || ai.data.label === 'rejected') return { kind: 'rejected', reason: ai.data.reason === 'blur' ? 'blur' : 'low_confidence', source: 'gemini' };
+    return { kind: 'ok', label: ai.data.label, confidence: ai.data.confidence, quality: ai.data.quality === 'good' ? 'good' : 'acceptable', source: 'gemini' };
+  }
+  // 2) ML service
   if (ML_URL) {
     try {
       const blob = await (await fetch(uri)).blob();
@@ -65,7 +76,14 @@ export async function predictLeaf(uri: string): Promise<LeafResult> {
 // UV oil screening: a photo of the oil sample taken under a UV torch in a dark room.
 // Real service: POST {ML_URL}/predict/oil (field `file`) -> { label, confidence, data_source }.
 // Without the service a deterministic mock answers and is labelled "محاكاة".
-export async function predictOil(uri: string): Promise<OilResult> {
+export async function predictOil(uri: string, lang: 'ar' | 'en' = 'ar'): Promise<OilResult> {
+  // 1) AI gateway. Below 0.60 the gateway names no class: it answers needs_lab.
+  const ai = await aiOil(uri, lang);
+  if (ai.ok) {
+    if (ai.data.rejected) return { kind: 'lab', confidence: ai.data.confidence, source: 'gemini' };
+    return { kind: 'class', label: ai.data.label, confidence: ai.data.confidence, source: 'gemini' };
+  }
+  // 2) ML service
   if (ML_URL) {
     try {
       const blob = await (await fetch(uri)).blob();

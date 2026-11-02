@@ -10,14 +10,17 @@ const ML_URL = process.env.EXPO_PUBLIC_ML_URL;
 
 export type LeafLabel = 'healthy' | 'peacock_spot' | 'aculus_olearius';
 
+// Why the AI gateway was not used (only set when a mock answered): lets the screen say so, e.g. "limit reached".
+export type Why = { error: string; limit: boolean; retryAfter: number | null };
+
 export type LeafResult =
-  | { kind: 'ok'; label: LeafLabel; confidence: number; quality: 'good' | 'acceptable'; source: MlSource }
-  | { kind: 'rejected'; reason: 'blur' | 'low_confidence'; source: MlSource };
+  | { kind: 'ok'; label: LeafLabel; confidence: number; quality: 'good' | 'acceptable'; source: MlSource; why?: Why }
+  | { kind: 'rejected'; reason: 'blur' | 'low_confidence'; source: MlSource; why?: Why };
 
 export type OilClass = 'reference' | 'anomalous' | 'adulteration_indicator';
 export type OilResult =
-  | { kind: 'class'; label: OilClass; confidence: number; source: MlSource }
-  | { kind: 'lab'; confidence: number; source: MlSource };
+  | { kind: 'class'; label: OilClass; confidence: number; source: MlSource; why?: Why }
+  | { kind: 'lab'; confidence: number; source: MlSource; why?: Why };
 
 // Confidence floors from the ML plan.
 export const LEAF_CONFIDENCE_FLOOR = 0.7;
@@ -36,6 +39,7 @@ export async function predictLeaf(uri: string, lang: 'ar' | 'en' = 'ar'): Promis
     if (ai.data.rejected || ai.data.label === 'rejected') return { kind: 'rejected', reason: ai.data.reason === 'blur' ? 'blur' : 'low_confidence', source: 'gemini' };
     return { kind: 'ok', label: ai.data.label, confidence: ai.data.confidence, quality: ai.data.quality === 'good' ? 'good' : 'acceptable', source: 'gemini' };
   }
+  const why: Why = { error: ai.error, limit: ai.limit, retryAfter: ai.retryAfter };
   // 2) ML service
   if (ML_URL) {
     try {
@@ -62,7 +66,7 @@ export async function predictLeaf(uri: string, lang: 'ar' | 'en' = 'ar'): Promis
   }
   await new Promise((r) => setTimeout(r, 900));
   const h = hash(uri);
-  if (h % 5 === 0) return { kind: 'rejected', reason: 'blur', source: 'محاكاة' };
+  if (h % 5 === 0) return { kind: 'rejected', reason: 'blur', source: 'محاكاة', why };
   const labels: LeafLabel[] = ['peacock_spot', 'healthy', 'aculus_olearius'];
   return {
     kind: 'ok',
@@ -70,6 +74,7 @@ export async function predictLeaf(uri: string, lang: 'ar' | 'en' = 'ar'): Promis
     confidence: 0.74 + ((h % 19) / 100),
     quality: h % 2 ? 'good' : 'acceptable',
     source: 'محاكاة',
+    why,
   };
 }
 
@@ -83,6 +88,7 @@ export async function predictOil(uri: string, lang: 'ar' | 'en' = 'ar'): Promise
     if (ai.data.rejected) return { kind: 'lab', confidence: ai.data.confidence, source: 'gemini' };
     return { kind: 'class', label: ai.data.label, confidence: ai.data.confidence, source: 'gemini' };
   }
+  const why: Why = { error: ai.error, limit: ai.limit, retryAfter: ai.retryAfter };
   // 2) ML service
   if (ML_URL) {
     try {
@@ -103,8 +109,8 @@ export async function predictOil(uri: string, lang: 'ar' | 'en' = 'ar'): Promise
   const h = hash(uri);
   const classes: OilClass[] = ['reference', 'anomalous', 'adulteration_indicator'];
   const confidence = 0.52 + ((h % 40) / 100);
-  if (confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence, source: 'محاكاة' };
-  return { kind: 'class', label: classes[h % 3], confidence, source: 'محاكاة' };
+  if (confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence, source: 'محاكاة', why };
+  return { kind: 'class', label: classes[h % 3], confidence, source: 'محاكاة', why };
 }
 
 // Oil screening is simulated by design (no real oil images exist for the demo).

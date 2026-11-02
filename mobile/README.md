@@ -12,7 +12,8 @@ simulated. The chips must change when real sources are wired in.
 
 ## Where things are
 - `src/theme.ts` design tokens (from Figma)
-- `src/data/repository.ts` data layer behind one interface (mock now; add Firestore here)
+- `src/data/repository.ts` data layer behind one interface (Realtime Database subscriptions + seed.json fallback)
+- `src/data/seed.json` source of truth for the farm demo data (also the offline fallback)
 - `src/data/climate.ts` Climate Stress Index (46.7 for dT=2, dP=-20, 10 dry days)
 - `src/data/ml.ts` calls the ML service; falls back to a mock if `EXPO_PUBLIC_ML_URL` is not set
 
@@ -21,5 +22,9 @@ simulated. The chips must change when real sources are wired in.
 The app posts the leaf photo to `POST /predict/leaf` (field `file`). The response shape it expects is
 `{ label, confidence, quality, rejected?, data_source }`; adjust `src/data/ml.ts` if the service differs.
 
-## Next: Firebase
-Add a `FirestoreRepository` implementing `Repository` and return it from `getRepository()`.
+## Firebase Realtime Database
+`src/firebase.ts` holds the web config (project identifiers, not secrets). `getRepository()` returns a
+`RealtimeRepository`: `subscribeHome` / `subscribeClimate` use `onValue`, so screens update live. If nothing arrives
+within 5 s (or the read is denied) the app falls back to `src/data/seed.json` and logs
+`[OliveWatch] using local sample data: ...`. Only the climate inputs are stored; the CSI is recomputed in code.
+Seed the database with `cd ../firebase && npm run seed`.

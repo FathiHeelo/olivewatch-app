@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
   const [data, setData] = useState<HomeData | null>(null);
   useEffect(() => {
-    getRepository().getHome().then(setData);
+    return getRepository().subscribeHome(setData);
   }, []);
 
   if (!data) return <ScreenShell title="أوليف ووتش" icon="sprout"><View /></ScreenShell>;

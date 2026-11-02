@@ -16,7 +16,7 @@ function dayLabel(daysAgo: number) {
 export default function ClimateScreen() {
   const [c, setC] = useState<Climate | null>(null);
   useEffect(() => {
-    getRepository().getClimate().then(setC);
+    return getRepository().subscribeClimate(setC);
   }, []);
   const series = useMemo(() => (c ? simulatedSeries(c.csi) : []), [c]);
   if (!c) return <ScreenShell title="المناخ والإجهاد البيئي" icon="weather-sunny"><View /></ScreenShell>;

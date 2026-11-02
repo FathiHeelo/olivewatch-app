@@ -1,5 +1,5 @@
 {
-  "_note": "Source of truth for the farm demo data. Seeded to Firestore by firebase/seed.mjs and used as the app's offline fallback. Climate stores the INPUTS; csi is always recomputed in code.",
+  "_note": "Source of truth for the farm demo data. Seeded to Realtime Database by firebase/seed.mjs and used as the app's offline fallback. Climate stores the INPUTS only; csi is always recomputed in code.",
   "farms": {
     "farm-east": {
       "name": "الحقل الشرقي — نابلس",
@@ -9,11 +9,42 @@
     }
   },
   "plots": {
-    "p1": { "farmId": "farm-east", "name": "قطعة الجبل الشمالي", "trees": 140, "status": "healthy", "lastCheck": "منذ يومين", "lastCheckDays": 2, "source": "تجريبية" },
-    "p2": { "farmId": "farm-east", "name": "قطعة الوادي", "trees": 160, "status": "needs_check", "lastCheck": "منذ 14 يوماً", "lastCheckDays": 14, "source": "تجريبية" },
-    "p3": { "farmId": "farm-east", "name": "قطعة السدرة", "trees": 120, "status": "healthy", "lastCheck": "أمس", "lastCheckDays": 1, "source": "تجريبية" }
+    "p1": {
+      "farmId": "farm-east",
+      "name": "قطعة الجبل الشمالي",
+      "trees": 140,
+      "status": "healthy",
+      "lastCheck": "منذ يومين",
+      "lastCheckDays": 2,
+      "source": "تجريبية"
+    },
+    "p2": {
+      "farmId": "farm-east",
+      "name": "قطعة الوادي",
+      "trees": 160,
+      "status": "needs_check",
+      "lastCheck": "منذ 14 يوماً",
+      "lastCheckDays": 14,
+      "source": "تجريبية"
+    },
+    "p3": {
+      "farmId": "farm-east",
+      "name": "قطعة السدرة",
+      "trees": 120,
+      "status": "healthy",
+      "lastCheck": "أمس",
+      "lastCheckDays": 1,
+      "source": "تجريبية"
+    }
   },
   "climate": {
-    "latest": { "dT": 2, "dP": -20, "dryDays": 10, "baseline": "2005–2024", "source": "محاكاة", "provider": "NASA POWER" }
+    "latest": {
+      "dT": 2,
+      "dP": -20,
+      "dryDays": 10,
+      "baseline": "2005–2024",
+      "source": "محاكاة",
+      "provider": "NASA POWER"
+    }
   }
 }

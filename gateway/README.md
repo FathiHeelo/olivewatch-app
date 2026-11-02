@@ -51,6 +51,24 @@ Only if you open the Expo **web** build in a phone browser (`http://192.168.1.20
 `gateway/.env` (or add that exact origin to `ALLOWED_ORIGINS`). Do not set it on a gateway exposed to the internet.
 The `/ai/*` per-IP rate limit counts the phone's address separately from the computer's.
 
+## Recording the demo (browser, one origin)
+
+Some browsers, such as the Claude desktop app's built-in browser pane, block a page from calling another port even on
+`localhost` (page on `:8081`, gateway on `:8787`). `scripts/demo-proxy.mjs` (repo root, no dependencies) serves both behind
+**one origin**, `http://localhost:8090`: `/ai/*` and `/health` go to the gateway (`:8787`), everything else, including
+Metro's WebSocket, goes to the Expo web server (`:8081`). Bodies are streamed unchanged, so photo uploads work. The proxy
+removes the `Origin` header on requests to the gateway (page and proxy are one origin, so there is nothing cross-origin
+left to check), which means the gateway's `ALLOWED_ORIGINS` needs no change. It logs one line per request (method, path,
+target, status), never headers or bodies.
+
+1. Gateway running: `cd gateway && npm run dev` (port 8787).
+2. `mobile/.env.local`: `EXPO_PUBLIC_AI_URL=http://localhost:8090`, then `cd mobile && npx expo start -c --web` (port 8081).
+3. `node scripts/demo-proxy.mjs` (port 8090; override with `DEMO_PROXY_PORT`).
+4. Open `http://localhost:8090/scan`. Check: `http://localhost:8090/health` answers `{"ok":true,...}`, and after a photo the
+   proxy prints `POST /ai/leaf -> gateway 200` and the result chip says "Gemini · فحص أولي".
+
+Go back to the phone test by setting `EXPO_PUBLIC_AI_URL` to the LAN address again (see above) and restarting Expo with `-c`.
+
 ## Routes
 
 All `POST`, JSON, `lang` is `"ar"` or `"en"`.

@@ -8,6 +8,7 @@ oil screening, traceability. UI language is Arabic, RTL. This is a hackathon dem
     mobile/     Expo SDK 58 + Expo Router app (farmer side)
     platform/   Vite + React + TypeScript dashboard for olive mills (port 5174)
     landing/    Vite + React + TypeScript single-page marketing site (port 5175)
+    gateway/    Node + TypeScript AI gateway: the only service that talks to Google Gemini (see gateway/README.md)
     firebase/   Realtime Database seed data, seed.mjs, check.mjs, demo rules file (not deployed)
 
 Each part is independent: its own `package.json`, README, dev script and build script.
@@ -17,7 +18,10 @@ Each part is independent: its own `package.json`, README, dev script and build s
     # 1. database (once)
     cd firebase && npm install && npm run seed && npm run check
 
-    # 2. each part
+    # 2. AI gateway (optional: without it the apps use their mock, labelled simulated)
+    cd gateway && npm install && cp .env.example .env   # set GEMINI_API_KEY, then: npm run dev
+
+    # 3. each part
     cd mobile   && npm install && npx expo start        # press w for web
     cd platform && npm install && npm run dev            # http://localhost:5174
     cd landing  && npm install && npm run dev            # http://localhost:5175
@@ -65,3 +69,7 @@ data: ...")`; the dashboard also shows a visible banner and refuses to save).
 - KPIs are computed from the batch records: with the seed data 5 batches, 6,390 kg olives, **907 L** oil (the batch
   that is not pressed yet has no oil value), 4 of 5 samples screened, 1 needs a lab check.
 - There is no pilot sign-up form: with open demo rules, collected emails would be public.
+- **AI features** (leaf scan, oil screening, advisor, climate narration, traceability text, insights) go through
+  `gateway/` to Google Gemini on its free tier. Results carry the chip "Gemini · Preliminary" (never "real"); the confidence
+  floors (leaf 0.70, oil 0.60) are enforced in code; the model may not introduce numbers that are not in the input; the key
+  lives only in `gateway/.env` (git-ignored). Free-tier content may be used by Google to improve its products.

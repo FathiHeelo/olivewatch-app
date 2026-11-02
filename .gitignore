@@ -7,8 +7,12 @@ web-build/
 .expo/
 expo-env.d.ts
 
-# env + logs
-.env*
+# env + logs: real secrets never get committed; only the empty template does
+.env
+.env.*
+!.env.example
+gateway/.env
+**/.env
 *.log
 npm-debug.*
 yarn-debug.*

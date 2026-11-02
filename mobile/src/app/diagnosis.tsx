@@ -23,7 +23,7 @@ const symptoms: { icon: IconName; tint: string; ink: string; title: string; text
 
 const actions = [
   { n: 1, t: 'Canopy Aeration', en: 'Prune dense inner canopies to increase airflow and sunlight penetration.', ar: 'تقليم الأفرع المتشابكة في قلب الشجرة لتقليل الرطوبة وتسهيل دخول ضوء الشمس.' },
-  { n: 2, t: 'Preventive Spray', en: 'Apply preventive copper hydroxide or organic bordeaux mixture (تركيبة بوردو) within 48h before rains.', dose: 'Dosage: 250g per 100L water' },
+  { n: 2, t: 'Preventive Spray', en: 'Apply preventive copper hydroxide or organic bordeaux mixture (تركيبة بوردو) within 48h before rains.', dose: true },
   { n: 3, t: 'Sanitation', en: 'Collect and compost fallen infected leaves away from root basins.', ar: 'جمع الأوراق المتساقطة وحرقها أو تخميرها بعيداً عن حوض الشجرة لمنع انتقال الأبواغ.' },
 ];
 
@@ -321,7 +321,7 @@ export default function Diagnosis() {
                     {a.dose ? (
                       <Row style={{ gap: 6, alignSelf: 'flex-start', backgroundColor: colors.raised, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 }}>
                         <Icon name="flask-outline" size={14} color={colors.primary} />
-                        <Txt size={12} face="labelBold" color={colors.primary}>{a.dose}</Txt>
+                        <Txt size={14} face="labelBold" color={colors.primary}>{pick('راجع المرشد الزراعي', 'Consult an agronomist')}</Txt>
                       </Row>
                     ) : null}
                   </View>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OliveWatch AI | تطبيق الموبايل</title>
+  <meta name="description" content="OliveWatch AI mobile app, shown inside a phone frame." />
+  <style>
+    :root {
+      --ground: #f4f7ef;
+      --ink: #1f381d;
+      --muted: #5b6b58;
+      --accent: #3f5b2a;
+      --gold: #e0a93b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --ground: #141a12; --ink: #e8f0e2; --muted: #a2b19c; --accent: #a9d168; }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: radial-gradient(1200px 700px at 70% 0%, rgba(169, 209, 104, 0.25), transparent 60%), var(--ground);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "IBM Plex Sans Arabic", Tahoma, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      padding: 16px;
+      overflow: hidden;
+    }
+    .side { max-width: 340px; display: flex; flex-direction: column; gap: 14px; }
+    .side h1 { margin: 0; font-size: 28px; line-height: 1.25; }
+    .side p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--muted); }
+    .side .en { direction: ltr; text-align: left; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+    .btn {
+      min-height: 48px; padding: 0 20px; border-radius: 14px; border: 1.5px solid var(--accent);
+      background: transparent; color: var(--accent); font: inherit; font-weight: 700; font-size: 15px;
+      display: inline-flex; align-items: center; justify-content: center; text-decoration: none; cursor: pointer;
+    }
+    .btn.primary { background: var(--accent); color: #fff; }
+    .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    /* The phone is laid out at its real size (390x844 screen) and scaled down by script when the window is short. */
+    .stage { width: calc(390px * var(--s, 1) + 24px * var(--s, 1)); height: calc(844px * var(--s, 1) + 24px * var(--s, 1)); flex: none; }
+    .phone {
+      width: 414px; height: 868px; padding: 12px; border-radius: 62px; background: #101410;
+      box-shadow: 0 0 0 2px #2b332a, 0 30px 70px rgba(20, 40, 20, 0.35);
+      transform: scale(var(--s, 1)); transform-origin: top left; position: relative;
+    }
+    .screen { width: 390px; height: 844px; border-radius: 50px; overflow: hidden; background: #fff; position: relative; display: flex; flex-direction: column; }
+    /* status bar strip: the camera island sits in it, so it never covers the app's own header */
+    .status { height: 40px; flex: none; background: #fff; position: relative; }
+    .island { position: absolute; top: 10px; left: 50%; width: 112px; height: 26px; margin-left: -56px; border-radius: 20px; background: #101410; pointer-events: none; }
+    .screen iframe { width: 100%; flex: 1; min-height: 0; border: 0; display: block; background: #fafaf6; }
+    @media (max-width: 900px) { .side { display: none; } }
+  </style>
+</head>
+<body>
+  <section class="side" aria-label="OliveWatch AI">
+    <h1>OliveWatch AI<br />تطبيق الموبايل</h1>
+    <p>هذه هي نسخة الويب من تطبيق الهاتف نفسه، معروضة داخل إطار هاتف. افتحها من هاتفك وستظهر بملء الشاشة.</p>
+    <p class="en">The same mobile app, in a phone frame. Open this link on a phone and it fills the screen.</p>
+    <div class="actions">
+      <a class="btn primary" href="./app/">فتح بملء الشاشة · Full screen</a>
+      <button class="btn" id="reload" type="button">إعادة التحميل · Reload</button>
+    </div>
+  </section>
+  <main class="stage" id="stage">
+    <div class="phone">
+      <div class="screen"><div class="status"><div class="island"></div></div><iframe id="app" src="./app/" title="OliveWatch AI mobile app" allow="camera; clipboard-write; fullscreen"></iframe></div>
+    </div>
+  </main>
+  <script>
+    // On a real phone (or any narrow window) skip the frame and open the app itself.
+    if (Math.min(window.innerWidth, window.screen.width) <= 600) {
+      location.replace('./app/' + location.search + location.hash);
+    }
+    function fit() {
+      var s = Math.min(1, (window.innerHeight - 32) / 868);
+      document.documentElement.style.setProperty('--s', String(Math.max(0.5, s)));
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    document.getElementById('reload').addEventListener('click', function () {
+      var f = document.getElementById('app');
+      f.src = f.src;
+    });
+  </script>
+</body>
+</html>

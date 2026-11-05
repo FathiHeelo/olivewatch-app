@@ -1,0 +1,141 @@
+{
+ "sampleName": "fixture",
+ "purityScore": 0,
+ "purity_score": 0,
+ "adulterantDetected": "Invalid UV image",
+ "adulterant_detected": "Invalid UV image",
+ "confidence": 1,
+ "tags": [
+  "invalid_image",
+  "red_0",
+  "green_0",
+  "blue_0",
+  "dark_or_no_liquid_roi",
+  "low_focus_or_flat_signal"
+ ],
+ "status": "adulterated",
+ "label": "invalid_image",
+ "authenticityScore": 0,
+ "fakeProbability": 0,
+ "freshnessScore": null,
+ "evooScore": null,
+ "estimatedAgingStep": null,
+ "agingConfidence": null,
+ "category": "invalid_image",
+ "verdict": "Invalid UV Image",
+ "uvFingerprint": {
+  "redChlorophyll": 0,
+  "greenBiologicalBaseline": 0,
+  "blueOxidation": 0,
+  "redBlueRatio": 0,
+  "greenBlueRatio": 0
+ },
+ "qualityFlags": [
+  "dark_or_no_liquid_roi",
+  "low_focus_or_flat_signal"
+ ],
+ "qualityMetrics": {
+  "signalFraction": 0,
+  "saturatedPixelFraction": 0,
+  "blurVariance": 0,
+  "centerBlueMean": 0,
+  "edgeBlueMean": 0,
+  "blueEdgeCenterRatio": 0,
+  "centerRedMean": 0,
+  "topRedMean": 0,
+  "redSurfaceRatio": 0,
+  "borderMean": 0,
+  "borderBrightFraction": 0
+ },
+ "photoSetup": {
+  "validForAnalysis": false,
+  "setupScore": 24,
+  "category": "no_liquid_detected",
+  "enhancementAttempted": false,
+  "enhancementApplied": false,
+  "enhancementMethod": null,
+  "recoveryLimitReason": null,
+  "reasons": [
+   "The analyzer could not find enough usable liquid signal."
+  ],
+  "retakeInstructions": [
+   "Fill more of the frame with the oil sample under UV."
+  ]
+ },
+ "decisionTrace": {
+  "rule": "quality_gate_failed",
+  "qualityGatePassed": false,
+  "qualityFlags": [
+   "dark_or_no_liquid_roi",
+   "low_focus_or_flat_signal"
+  ],
+  "signals": {
+   "redDetected": false,
+   "greenBaselinePresent": false,
+   "blueDominant": false,
+   "redWeak": true
+  },
+  "scores": {
+   "redPresenceScore": 0,
+   "greenPresenceScore": 0,
+   "authenticityScore": 0,
+   "fakeProbability": 0,
+   "freshnessScore": null
+  },
+  "channelFractions": {
+   "redFraction": 0,
+   "greenFraction": 0,
+   "blueFraction": 0
+  },
+  "notes": [
+   "A red-looking pixel region is only counted as useful evidence when it is inside the liquid ROI and not a surface/glare hotspot.",
+   "The fake/refined rule requires weak red, dominant blue, and absent green baseline after the quality gate passes."
+  ]
+ },
+ "scientificExplanation": "The image did not pass the UV quality gate. Retake in a dark room, crop to the liquid center, and avoid glass-edge reflections or saturated UV glare.",
+ "referenceComparison": {
+  "distanceFromAgingStep0": null,
+  "closestReference": null,
+  "step0Reference": {
+   "agingStep": 0,
+   "fluorescence": {
+    "redBlueRatio": 48.8616,
+    "greenBlueRatio": 6.1074,
+    "blue430450": 5.1935,
+    "green510550": 26.2766,
+    "red660690": 194.283
+   },
+   "absorption": {
+    "K232": 1.901,
+    "K268": 0.1152,
+    "deltaK": -0.0021
+   }
+  },
+  "step9Reference": {
+   "agingStep": 9,
+   "fluorescence": {
+    "redBlueRatio": 22.8824,
+    "greenBlueRatio": 3.6979,
+    "blue430450": 10.4872,
+    "green510550": 33.4895,
+    "red660690": 189.4046
+   },
+   "absorption": {
+    "K232": 2.395,
+    "K268": 0.2802,
+    "deltaK": 0.0125
+   }
+  }
+ },
+ "calibration": {
+  "isCalibrated": false,
+  "expectedPhoneToLabErrorPct": 25,
+  "expectedAgingStepError": 2
+ },
+ "absorptionNote": "K232, K268, and deltaK are stored from lab absorption files for reference. A normal phone UV fluorescence photo cannot directly measure those absorption metrics.",
+ "fluorescence_intensity": 0,
+ "recommendation": "The image did not pass the UV quality gate. Retake in a dark room, crop to the liquid center, and avoid glass-edge reflections or saturated UV glare.",
+ "sample_name": "fixture",
+ "adulteration_pct": 0,
+ "risk_level": "adulterated"
+}

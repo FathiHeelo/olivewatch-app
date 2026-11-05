@@ -1,0 +1,150 @@
+{
+ "sampleName": "fixture",
+ "purityScore": 75,
+ "purity_score": 75,
+ "adulterantDetected": null,
+ "adulterant_detected": null,
+ "confidence": 0.693,
+ "tags": [
+  "fresh_evoo",
+  "red_548",
+  "green_456",
+  "blue_316",
+  "background_ignored_mask_only"
+ ],
+ "status": "pure",
+ "label": "fresh_evoo",
+ "authenticityScore": 100,
+ "fakeProbability": 0,
+ "freshnessScore": 75,
+ "evooScore": 75,
+ "estimatedAgingStep": 2,
+ "agingConfidence": 70,
+ "category": "fresh_evoo",
+ "verdict": "Fresh EVOO-like",
+ "uvFingerprint": {
+  "redChlorophyll": 548.13,
+  "greenBiologicalBaseline": 455.79,
+  "blueOxidation": 316.44,
+  "redBlueRatio": 1.7322,
+  "greenBlueRatio": 1.4404
+ },
+ "qualityFlags": [
+  "background_ignored_mask_only"
+ ],
+ "qualityMetrics": {
+  "signalFraction": 0.34190231362467866,
+  "saturatedPixelFraction": 0.04645438230586409,
+  "blurVariance": 2325.9655584140596,
+  "centerBlueMean": 87.71650302780881,
+  "edgeBlueMean": 70.00938589434165,
+  "blueEdgeCenterRatio": 0.7981324229719248,
+  "centerRedMean": 147.54776882826738,
+  "topRedMean": 0,
+  "redSurfaceRatio": 0,
+  "borderMean": 141.46353610814657,
+  "borderBrightFraction": 0.8105458713783154
+ },
+ "photoSetup": {
+  "validForAnalysis": true,
+  "setupScore": 82,
+  "category": "recovered_dark_uv_oil",
+  "enhancementAttempted": true,
+  "enhancementApplied": true,
+  "enhancementMethod": "mask_only_no_color_transform",
+  "recoveryLimitReason": null,
+  "reasons": [
+   "The background was bright, so the analyzer ignored non-sample pixels before scoring."
+  ],
+  "retakeInstructions": []
+ },
+ "decisionTrace": {
+  "rule": "fresh_rule_authenticity_and_freshness_high",
+  "qualityGatePassed": true,
+  "qualityFlags": [
+   "background_ignored_mask_only"
+  ],
+  "signals": {
+   "redDetected": true,
+   "greenBaselinePresent": true,
+   "blueDominant": false,
+   "redWeak": false
+  },
+  "scores": {
+   "redPresenceScore": 95,
+   "greenPresenceScore": 100,
+   "authenticityScore": 100,
+   "fakeProbability": 0,
+   "freshnessScore": 75
+  },
+  "channelFractions": {
+   "redFraction": 0.4151,
+   "greenFraction": 0.3452,
+   "blueFraction": 0.2397
+  },
+  "notes": [
+   "A red-looking pixel region is only counted as useful evidence when it is inside the liquid ROI and not a surface/glare hotspot.",
+   "The fake/refined rule requires weak red, dominant blue, and absent green baseline after the quality gate passes."
+  ]
+ },
+ "scientificExplanation": "The red chlorophyll signal is strong, the green biological baseline is present, and blue oxidation is low. The sample is closest to a fresh EVOO-like UV fingerprint.",
+ "referenceComparison": {
+  "distanceFromAgingStep0": 25,
+  "closestReference": {
+   "agingStep": 2,
+   "fluorescence": {
+    "redBlueRatio": 43.4375,
+    "greenBlueRatio": 5.6673,
+    "blue430450": 5.8398,
+    "green510550": 27.3428,
+    "red660690": 191.6164
+   },
+   "absorption": {
+    "K232": 1.9692,
+    "K268": 0.1067,
+    "deltaK": -0.0018
+   }
+  },
+  "step0Reference": {
+   "agingStep": 0,
+   "fluorescence": {
+    "redBlueRatio": 48.8616,
+    "greenBlueRatio": 6.1074,
+    "blue430450": 5.1935,
+    "green510550": 26.2766,
+    "red660690": 194.283
+   },
+   "absorption": {
+    "K232": 1.901,
+    "K268": 0.1152,
+    "deltaK": -0.0021
+   }
+  },
+  "step9Reference": {
+   "agingStep": 9,
+   "fluorescence": {
+    "redBlueRatio": 22.8824,
+    "greenBlueRatio": 3.6979,
+    "blue430450": 10.4872,
+    "green510550": 33.4895,
+    "red660690": 189.4046
+   },
+   "absorption": {
+    "K232": 2.395,
+    "K268": 0.2802,
+    "deltaK": 0.0125
+   }
+  }
+ },
+ "calibration": {
+  "isCalibrated": false,
+  "expectedPhoneToLabErrorPct": 25,
+  "expectedAgingStepError": 2
+ },
+ "absorptionNote": "K232, K268, and deltaK are stored from lab absorption files for reference. A normal phone UV fluorescence photo cannot directly measure those absorption metrics.",
+ "fluorescence_intensity": 440.12,
+ "recommendation": "The red chlorophyll signal is strong, the green biological baseline is present, and blue oxidation is low. The sample is closest to a fresh EVOO-like UV fingerprint.",
+ "sample_name": "fixture",
+ "adulteration_pct": 0,
+ "risk_level": "pure"
+}

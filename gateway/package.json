@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && tsc",
     "test": "tsx scripts/verify-failures.ts",
-    "test:real": "tsx scripts/verify-real.ts"
+    "test:real": "tsx scripts/verify-real.ts",
+    "test:uv": "tsx --test ../shared/zaytoun.test.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

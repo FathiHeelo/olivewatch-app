@@ -8,7 +8,6 @@ import { advisor } from './routes/advisor.js';
 import { climate } from './routes/climate.js';
 import { insights } from './routes/insights.js';
 import { leaf } from './routes/leaf.js';
-import { oil } from './routes/oil.js';
 import { trace } from './routes/trace.js';
 
 // localhost and the private IPv4 ranges (10/8, 172.16/12, 192.168/16), any port.
@@ -51,7 +50,6 @@ app.get('/ai/config', (_req, res) =>
 );
 
 app.post(FEATURES.leaf.route, leaf);
-app.post(FEATURES.oil.route, oil);
 app.post(FEATURES.advisor.route, advisor);
 app.post(FEATURES.climate.route, climate);
 app.post(FEATURES.trace.route, trace);

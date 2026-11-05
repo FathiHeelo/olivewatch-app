@@ -2,7 +2,7 @@
 import type { z } from 'zod';
 import { FEATURES } from './config.js';
 import { applyGlossary } from './glossary.js';
-import type { leafSchema, oilSchema } from './schemas.js';
+import type { leafSchema } from './schemas.js';
 
 export const DATA_SOURCE = 'gemini' as const;
 
@@ -25,23 +25,6 @@ export function finishLeaf(r: z.infer<typeof leafSchema>, lang: 'ar' | 'en'): Le
 
 /** Safe state when the model's output could not be validated. */
 export const leafUnclear = (lang: 'ar' | 'en'): LeafOut => ({ label: 'rejected', confidence: 0, quality: 'poor', rejected: true, reason: 'low_confidence', message: retake[lang], data_source: DATA_SOURCE });
-
-// ---- oil ----------------------------------------------------------------------------------------------------
-export const OIL_FLOOR = FEATURES.oil.rules.minConfidence ?? 0.6; // tuned in config.ts
-
-export type OilOut =
-  | { label: 'reference' | 'anomalous' | 'adulteration_indicator'; confidence: number; rejected: false; needs_lab: false; data_source: typeof DATA_SOURCE }
-  | { rejected: true; needs_lab: true; confidence: number; message: string; data_source: typeof DATA_SOURCE };
-
-const lab = { ar: 'يحتاج تحقق مخبري', en: 'Needs laboratory verification' };
-
-/** Below 0.60 no class is named at all: only "needs laboratory verification". */
-export function finishOil(r: z.infer<typeof oilSchema>, lang: 'ar' | 'en'): OilOut {
-  if (r.confidence < OIL_FLOOR) return { rejected: true, needs_lab: true, confidence: r.confidence, message: lab[lang], data_source: DATA_SOURCE };
-  return { label: r.label, confidence: r.confidence, rejected: false, needs_lab: false, data_source: DATA_SOURCE };
-}
-
-export const oilNeedsLab = (lang: 'ar' | 'en'): OilOut => ({ rejected: true, needs_lab: true, confidence: 0, message: lab[lang], data_source: DATA_SOURCE });
 
 // ---- the model may not introduce numbers --------------------------------------------------------------------
 const toWestern = (s: string) => s.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));

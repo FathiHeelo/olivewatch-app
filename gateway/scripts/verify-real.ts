@@ -44,15 +44,6 @@ const leafAr = await post('/ai/leaf', imgBody('leaf-spots.jpg', 'ar'));
 show('/ai/leaf  [Arabic]', leafAr);
 check(leafAr.status === 200, 'Arabic request works');
 
-// ---- oil ------------------------------------------------------------------------------------------------------
-for (const [f, note] of [['uv-synthetic.png', 'synthetic UV vial'], ['not-an-oil-uv.jpg', 'NOT a UV photo (bottle)']] as const) {
-  const r = await post('/ai/oil', imgBody(f));
-  show(`/ai/oil  [${note}]`, r);
-  check(r.status === 200 && r.json?.data_source === 'gemini', 'status 200, data_source = gemini');
-  if (r.json?.rejected) check(r.json.needs_lab === true && r.json.label === undefined, 'below 0.60 => needs lab, NO class named');
-  else check(['reference', 'anomalous', 'adulteration_indicator'].includes(r.json?.label) && r.json?.confidence >= 0.6, 'accepted result names a class with confidence >= 0.60');
-}
-
 // ---- advisor --------------------------------------------------------------------------------------------------
 const adv = await post('/ai/advisor', { lang: 'ar', messages: [{ role: 'user', text: 'هل يؤثر رش النحاس على حموضة الزيت؟' }], context: { alert: 'Peacock Spot risk in Plot 4B', csi: 46.7 } });
 show('/ai/advisor  [ar + context]', adv);

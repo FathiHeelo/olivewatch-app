@@ -9,7 +9,7 @@
 import { glossaryRule } from './glossary.js';
 
 export type Lang = 'ar' | 'en';
-export type FeatureId = 'leaf' | 'oil' | 'advisor' | 'climate' | 'trace' | 'insights';
+export type FeatureId = 'leaf' | 'advisor' | 'climate' | 'trace' | 'insights';
 export type InputType = 'text' | 'image' | 'text+image';
 
 // Subset of the Gemini responseSchema (OpenAPI-style) that we use.
@@ -32,7 +32,7 @@ export type FeatureConfig = {
   timeoutMs: number;
   /** Rules enforced in CODE after the model answers (never left to the prompt). */
   rules: {
-    minConfidence?: number; // leaf 0.70, oil 0.60
+    minConfidence?: number; // leaf 0.70
     maxHistory?: number; // advisor
     numbersFromInputOnly?: boolean; // climate, trace, insights: the model may not introduce numbers
   };
@@ -87,31 +87,7 @@ export const FEATURES: Record<FeatureId, FeatureConfig> = {
     rules: { minConfidence: 0.7 },
   },
 
-  oil: {
-    id: 'oil',
-    route: '/ai/oil',
-    model: MAIN,
-    fallbackModel: LITE,
-    systemInstruction: both(
-      `${HONESTY} Task: the photo shows an olive-oil sample under a UV torch in a dark room. Classify the fluorescence pattern as exactly one of: reference (pattern typical of fresh extra-virgin oil: chlorophyll red/dark-red emission), anomalous (atypical or weak pattern), adulteration_indicator (pattern that suggests blending or refined oil). This is only a screening hint, never a quality certificate. If the photo is not a UV photo of an oil sample, set a LOW confidence. confidence is your honest probability (0 to 1). Output JSON only.`,
-    ),
-    temperature: 0.1,
-    topP: 0.8,
-    maxOutputTokens: 300,
-    thinkingBudget: 0,
-    responseMimeType: 'application/json',
-    responseSchema: {
-      type: 'OBJECT',
-      properties: {
-        label: { type: 'STRING', enum: ['reference', 'anomalous', 'adulteration_indicator'] },
-        confidence: num('0..1'),
-      },
-      required: ['label', 'confidence'],
-    },
-    input: 'image',
-    timeoutMs: 25_000,
-    rules: { minConfidence: 0.6 },
-  },
+  // UV oil screening is not a Gemini feature any more: it runs on the Zaytoun Vision backend (zaytoun-backend/).
 
   advisor: {
     id: 'advisor',

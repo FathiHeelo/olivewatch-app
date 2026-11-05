@@ -244,7 +244,7 @@ export default function Home() {
         </Row>
         {[
           { icon: 'virus' as IconName, tint: '#FBDAD4', ink: colors.error, title: 'Plot B - Tree #142', chip: 'Treated', name: 'Olive Leaf Scab (عين الطاووس)', note: 'Detected at 96% AI confidence' },
-          { icon: 'check-circle-outline' as IconName, tint: colors.secondaryContainer, ink: colors.primaryContainer, title: 'Plot A - Tree #89', chip: 'Souri Pure', name: 'Healthy Souri Foliage (أوراق سليمة)', note: '99% confidence • Prime Condition' },
+          { icon: 'check-circle-outline' as IconName, tint: colors.secondaryContainer, ink: colors.primaryContainer, title: 'Plot A - Tree #89', chip: 'Healthy', name: 'Healthy Souri Foliage (أوراق سليمة)', note: '99% confidence • Prime Condition' },
         ].map((s) => (
           <PressScale key={s.title} onPress={() => router.push('/diagnosis')} accessibilityLabel={s.title} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.card, padding: 14 }}>
             <Row style={{ gap: 12 }}>

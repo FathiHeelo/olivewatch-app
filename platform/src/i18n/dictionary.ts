@@ -25,7 +25,7 @@ const shell: Row[] = [
 ];
 
 const hero: Row[] = [
-  ['Palestinian Authenticity Charter', 'ميثاق الأصالة الفلسطينية'],
+  ['Palestinian Origin Charter', 'ميثاق المنشأ الفلسطيني'],
   ['Terrace Guardianship', 'حراسة المدرّجات'],
   ['"Every Tree Matters. Every Harvest Counts. Every Drop Has Value."', '"كل شجرة مهمة. كل محصول له قيمة. كل قطرة ثمينة."'],
   ['Every Tree Matters. Every Harvest Counts. Every Drop Has Value. — Beita Cooperative #PAL-48', 'كل شجرة مهمة. كل محصول له قيمة. كل قطرة ثمينة. — تعاونية بيتا #PAL-48'],

@@ -10,6 +10,8 @@ import {
 } from '@expo-google-fonts/ibm-plex-sans-arabic';
 import { PlusJakartaSans_500Medium, PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans';
 import { SpaceGrotesk_500Medium, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
+import { Cairo_600SemiBold, Cairo_700Bold } from '@expo-google-fonts/cairo';
+import { Tajawal_400Regular, Tajawal_500Medium, Tajawal_700Bold } from '@expo-google-fonts/tajawal';
 import { LangProvider } from '../i18n';
 import { colors } from '../theme';
 
@@ -29,6 +31,12 @@ export default function RootLayout() {
     PlusJakartaSans_800ExtraBold,
     SpaceGrotesk_500Medium,
     SpaceGrotesk_700Bold,
+    // UV screening screens: Cairo headings, Tajawal body
+    Cairo_600SemiBold,
+    Cairo_700Bold,
+    Tajawal_400Regular,
+    Tajawal_500Medium,
+    Tajawal_700Bold,
   });
   if (!loaded) return <View style={{ flex: 1, backgroundColor: colors.ground }} />;
   return (

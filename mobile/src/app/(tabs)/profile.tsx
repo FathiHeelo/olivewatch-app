@@ -1,5 +1,6 @@
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { uvText } from '../../uv/zaytoun-i18n';
 import { Body, BrandHeader, Card, Icon, IconName, PressScale, Row, Screen, Txt } from '../../components/ui';
 import { useLang } from '../../i18n';
 import { colors } from '../../theme';
@@ -7,13 +8,14 @@ import { colors } from '../../theme';
 const rows: { icon: IconName; en: string; ar: string; to?: string }[] = [
   { icon: 'pine-tree', en: 'My Groves', ar: 'بياراتي', to: '/groves' },
   { icon: 'qrcode-scan', en: 'Batch Passport', ar: 'وثيقة تتبع الزيت', to: '/passport' },
-  { icon: 'flask-outline', en: 'UV Oil Analyzer', ar: 'فاحص الفلورة', to: '/oil' },
+  { icon: 'history', en: 'UV scan history', ar: 'سجل فحوص UV', to: '/uv-history' },
   { icon: 'bell-outline', en: 'Notifications', ar: 'التنبيهات' },
   { icon: 'web', en: 'Language', ar: 'اللغة: عربي / EN' },
 ];
 
 export default function Profile() {
-  const { rowDir, nextIcon, toggle } = useLang();
+  const { rowDir, nextIcon, toggle, lang } = useLang();
+  const uv = uvText(lang);
   const router = useRouter();
   return (
     <Screen>
@@ -45,6 +47,21 @@ export default function Profile() {
             </PressScale>
           ))}
         </Card>
+
+        {/* Credits */}
+        <PressScale onPress={() => Linking.openURL(uv.creditUrl)} accessibilityLabel={uv.credit} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: 20, padding: 16, minHeight: 56 }}>
+          <Row style={{ gap: 10, alignItems: 'flex-start' }}>
+            <Icon name="information-outline" size={22} color={colors.primaryContainer} />
+            <View style={{ flex: 1, gap: 2 }}>
+              <Txt size={14} weight="bold" color={colors.primary}>
+                {uv.credit}
+              </Txt>
+              <Txt size={14} color={colors.muted}>
+                {uv.creditUrl}
+              </Txt>
+            </View>
+          </Row>
+        </PressScale>
 
         <Card style={{ backgroundColor: colors.low }}>
           <Row style={{ gap: 10, alignItems: 'flex-start' }}>

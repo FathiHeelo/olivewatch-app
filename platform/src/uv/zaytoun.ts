@@ -18,6 +18,8 @@ export type UvIndicators = {
   blue: 'dominant' | 'not_dominant';
   redBlueRatio: number | null;
   greenBlueRatio: number | null;
+  /** Share of red, green and blue in the liquid's emission (0-1 each), for the evidence bars. */
+  fractions: { red: number; green: number; blue: number } | null;
   flags: string[];
 };
 
@@ -60,7 +62,10 @@ type Raw = {
   confidence?: unknown;
   qualityFlags?: unknown;
   photoSetup?: { validForAnalysis?: unknown; enhancementApplied?: unknown; category?: unknown } | null;
-  decisionTrace?: { signals?: { redDetected?: unknown; greenBaselinePresent?: unknown; blueDominant?: unknown } } | null;
+  decisionTrace?: {
+    signals?: { redDetected?: unknown; greenBaselinePresent?: unknown; blueDominant?: unknown };
+    channelFractions?: { redFraction?: unknown; greenFraction?: unknown; blueFraction?: unknown };
+  } | null;
   uvFingerprint?: { redBlueRatio?: unknown; greenBlueRatio?: unknown } | null;
   calibration?: { isCalibrated?: unknown } | null;
   azure_custom_vision?: unknown;
@@ -68,6 +73,13 @@ type Raw = {
 };
 
 const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+
+/** Plain-language reason for one backend quality flag (null for internal flags with no user meaning). */
+export function flagReason(flag: string): RetakeReason | null {
+  if (FLAG_REASON[flag]) return FLAG_REASON[flag];
+  if (flag === 'low_focus_or_flat_signal') return 'unclear';
+  return null;
+}
 
 /** Qualitative level only: the backend's confidence is a rule margin, not a calibrated probability. */
 export function confidenceLevel(confidence: unknown, isCalibrated: boolean): ConfidenceLevel {
@@ -89,12 +101,15 @@ export function normalizeZaytoun(input: unknown): UvResult | null {
   const setup = raw.photoSetup ?? null;
   const setupCategory = typeof setup?.category === 'string' ? setup.category : '';
   const signals = raw.decisionTrace?.signals ?? {};
+  const cf = raw.decisionTrace?.channelFractions ?? {};
+  const [fr, fg, fb] = [num(cf.redFraction), num(cf.greenFraction), num(cf.blueFraction)];
   const indicators: UvIndicators = {
     red: signals.redDetected === true ? 'detected' : 'weak',
     greenBaseline: signals.greenBaselinePresent === true ? 'present' : 'absent',
     blue: signals.blueDominant === true ? 'dominant' : 'not_dominant',
     redBlueRatio: num(raw.uvFingerprint?.redBlueRatio),
     greenBlueRatio: num(raw.uvFingerprint?.greenBlueRatio),
+    fractions: fr !== null && fg !== null && fb !== null ? { red: fr, green: fg, blue: fb } : null,
     flags,
   };
   const azure = raw.azure_custom_vision ?? raw.azureCustomVision;

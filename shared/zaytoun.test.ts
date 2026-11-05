@@ -38,6 +38,8 @@ test('success: calls POST {base}/api/analyze with the image and returns a normal
   assert.equal(r.data.indicators?.greenBaseline, 'present');
   assert.equal(r.data.indicators?.blue, 'not_dominant');
   assert.equal(typeof r.data.indicators?.redBlueRatio, 'number');
+  const f = r.data.indicators?.fractions;
+  assert.ok(f && Math.abs(f.red + f.green + f.blue - 1) < 0.01, 'channel fractions add up to 1');
   assert.deepEqual(r.data.retake, []);
   assert.equal(r.data.azure, undefined);
   assert.equal(r.data.raw, VALID);

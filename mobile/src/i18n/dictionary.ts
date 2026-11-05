@@ -36,6 +36,7 @@ const home: Row[] = [
   ['Rain Today', 'مطر اليوم'],
   ['Scan Leaf AI', 'افحص الورقة', 'Scan Leaf AI'],
   ['UV Oil Scan', 'فحص الزيت بـ UV (يو في)'],
+  ['UV scan history', 'سجل فحوص UV (يو في)'],
   ['Satellite NDVI', 'NDVI (إن دي في آي) من القمر الصناعي'],
   ['Ask AI Murshid', 'اسأل المرشد الذكي'],
   ['Trace Batch QR', 'تتبّع الدفعة بـ QR'],

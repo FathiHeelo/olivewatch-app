@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+zaytoun.db
+uploads/
+.env
+.env.*
+model.pkl
+dist/

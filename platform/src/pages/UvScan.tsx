@@ -204,12 +204,6 @@ export default function UvScan() {
       <History t={t} lang={lang} scans={scans} failed={historyFailed} onPrintScan={(scan) => setPrintTarget({ kind: 'scan', scan })} onPrintTable={(list) => setPrintTarget({ kind: 'table', scans: list })} />
 
       <Notice t={t} />
-      <p className="uv-muted">
-        {t.credit}:{' '}
-        <a href={t.creditUrl} target="_blank" rel="noreferrer">
-          {t.creditUrl}
-        </a>
-      </p>
 
       {printTarget ? <PrintReport t={t} lang={lang} target={printTarget} /> : null}
     </div>

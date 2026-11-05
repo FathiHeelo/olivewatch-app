@@ -205,9 +205,6 @@ export default function UvScan() {
         {phase.k === 'done' ? <Result result={phase.result} saved={phase.saved} uri={phase.uri} onNew={reset} /> : null}
 
         {phase.k !== 'capture' && phase.k !== 'preview' ? <Notice /> : null}
-        <P size={14}>
-          {t.credit}: {t.creditUrl}
-        </P>
       </ScrollView>
     </Screen>
   );

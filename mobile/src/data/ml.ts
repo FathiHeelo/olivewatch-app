@@ -1,6 +1,6 @@
-// Leaf / oil screening. Priority order: (1) the AI gateway (EXPO_PUBLIC_AI_URL, Gemini, labelled "Gemini · فحص أولي"),
+// Leaf screening. Priority order: (1) the AI gateway (EXPO_PUBLIC_AI_URL, Gemini, labelled "Gemini · فحص أولي"),
 // (2) the FastAPI ML service (EXPO_PUBLIC_ML_URL), (3) a deterministic mock labelled "محاكاة".
-import { aiLeaf, aiOil } from './aiClient';
+import { aiLeaf } from './aiClient';
 import type { Source } from './repository';
 
 // 'gemini' = a Gemini preliminary screening (not a trained classifier, never "real").
@@ -17,14 +17,8 @@ export type LeafResult =
   | { kind: 'ok'; label: LeafLabel; confidence: number; quality: 'good' | 'acceptable'; source: MlSource; why?: Why }
   | { kind: 'rejected'; reason: 'blur' | 'low_confidence'; source: MlSource; why?: Why };
 
-export type OilClass = 'reference' | 'anomalous' | 'adulteration_indicator';
-export type OilResult =
-  | { kind: 'class'; label: OilClass; confidence: number; source: MlSource; why?: Why }
-  | { kind: 'lab'; confidence: number; source: MlSource; why?: Why };
-
-// Confidence floors from the ML plan.
+// Confidence floor from the ML plan.
 export const LEAF_CONFIDENCE_FLOOR = 0.7;
-export const OIL_CONFIDENCE_FLOOR = 0.6;
 
 function hash(s: string) {
   let h = 0;
@@ -78,44 +72,4 @@ export async function predictLeaf(uri: string, lang: 'ar' | 'en' = 'ar'): Promis
   };
 }
 
-// UV oil screening: a photo of the oil sample taken under a UV torch in a dark room.
-// Real service: POST {ML_URL}/predict/oil (field `file`) -> { label, confidence, data_source }.
-// Without the service a deterministic mock answers and is labelled "محاكاة".
-export async function predictOil(uri: string, lang: 'ar' | 'en' = 'ar'): Promise<OilResult> {
-  // 1) AI gateway. Below 0.60 the gateway names no class: it answers needs_lab.
-  const ai = await aiOil(uri, lang);
-  if (ai.ok) {
-    if (ai.data.rejected) return { kind: 'lab', confidence: ai.data.confidence, source: 'gemini' };
-    return { kind: 'class', label: ai.data.label, confidence: ai.data.confidence, source: 'gemini' };
-  }
-  const why: Why = { error: ai.error, limit: ai.limit, retryAfter: ai.retryAfter };
-  // 2) ML service
-  if (ML_URL) {
-    try {
-      const blob = await (await fetch(uri)).blob();
-      const form = new FormData();
-      form.append('file', blob as any, 'oil_uv.jpg');
-      const res = await fetch(`${ML_URL}/predict/oil`, { method: 'POST', body: form });
-      if (!res.ok) throw new Error(String(res.status));
-      const j = await res.json();
-      const src: Source = j.data_source === 'simulated' ? 'محاكاة' : 'حقيقية';
-      if (j.rejected || j.confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence: j.confidence ?? 0, source: src };
-      return { kind: 'class', label: j.label, confidence: j.confidence, source: src };
-    } catch {
-      // fall through to the mock
-    }
-  }
-  await new Promise((r) => setTimeout(r, 1000));
-  const h = hash(uri);
-  const classes: OilClass[] = ['reference', 'anomalous', 'adulteration_indicator'];
-  const confidence = 0.52 + ((h % 40) / 100);
-  if (confidence < OIL_CONFIDENCE_FLOOR) return { kind: 'lab', confidence, source: 'محاكاة', why };
-  return { kind: 'class', label: classes[h % 3], confidence, source: 'محاكاة', why };
-}
-
-// Oil screening is simulated by design (no real oil images exist for the demo).
-export const oilSamples: { id: string; name: string; result: OilResult }[] = [
-  { id: 'a', name: 'عينة أ', result: { kind: 'class', label: 'reference', confidence: 0.82, source: 'محاكاة' } },
-  { id: 'b', name: 'عينة ب', result: { kind: 'class', label: 'anomalous', confidence: 0.71, source: 'محاكاة' } },
-  { id: 'c', name: 'عينة ج', result: { kind: 'lab', confidence: 0.58, source: 'محاكاة' } },
-];
+// UV oil screening moved to the Zaytoun Vision backend: see src/uv/zaytoun.ts and src/app/uv.tsx.

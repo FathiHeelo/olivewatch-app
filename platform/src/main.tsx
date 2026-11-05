@@ -13,6 +13,7 @@ import './styles/detail.css';
 import './styles/more.css';
 import './styles/dashboard.css';
 import './styles/overlays.css';
+import './styles/uv.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

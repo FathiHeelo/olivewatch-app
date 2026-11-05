@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useLang } from '../i18n';
+import { DEFAULT_MILL_ID, StoredScan, subscribeUvScans } from '../uv/scans';
+import { uvText } from '../uv/zaytoun-i18n';
 import QrBlock from '../components/QrBlock';
 import Timeline from '../components/Timeline';
 import { ButtonLink, Card, Empty, Loading, PageHeader, Pill, ScreeningPill, SourceChip, StatusPill, Val, kgText } from '../components/ui';
@@ -9,6 +12,33 @@ import { fmtDate, fmtNum, fmtPct, todayISO } from '../data/format';
 import { sampleOf } from '../data/kpis';
 import { requestLabCheck } from '../data/repository';
 import { CONFIDENCE_FLOOR, Sample, ScreeningResult } from '../data/types';
+
+// UV scans (Zaytoun Vision) linked to this batch, by batch or sample id. Shown as "Preliminary screening".
+function UvScansForBatch({ batchId, sampleId }: { batchId: string; sampleId?: string }) {
+  const { lang } = useLang();
+  const t = uvText(lang);
+  const { mill } = useMillData();
+  const [scans, setScans] = useState<StoredScan[]>([]);
+  useEffect(() => subscribeUvScans(mill?.id ?? DEFAULT_MILL_ID, setScans), [mill?.id]);
+  const mine = scans.filter((s) => s.batchId === batchId || (sampleId && s.sampleId === sampleId));
+  return (
+    <Card title={`${t.title} · ${t.traceLabel}`} aside={<Link to="/tools/uv">{t.openFull}</Link>}>
+      {mine.length ? (
+        <ul className="uv-list">
+          {mine.map((s) => (
+            <li key={s.id}>
+              {new Date(s.at).toLocaleString(lang === 'ar' ? 'ar' : 'en-GB')} · {s.valid && s.decision ? t.decisions[s.decision].title : t.retakeTitle}
+              {s.valid && s.confidenceLevel ? ` · ${t.levelLabel}: ${t.levels[s.confidenceLevel]}` : ''}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="muted">{t.historyEmpty}</p>
+      )}
+      <p className="muted">{t.notice}</p>
+    </Card>
+  );
+}
 
 // Below the confidence floor the screening names no class and asks for a laboratory check.
 function effectiveResult(s?: Sample): ScreeningResult {
@@ -98,6 +128,8 @@ export default function BatchDetail() {
             {result === 'pending' && <p className="callout">لم تُفحص العينة بعد.</p>}
             <p className="muted">هذا فحص أولي وليس شهادة جودة.</p>
           </Card>
+
+          <UvScansForBatch batchId={batch.id} sampleId={sample?.id} />
 
           <Card title="مسار الدفعة">
             <Timeline steps={steps} />

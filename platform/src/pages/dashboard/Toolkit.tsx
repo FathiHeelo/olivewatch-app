@@ -6,10 +6,10 @@ import { useOverlays } from '../../components/overlays/OverlayProvider';
 
 // Each module opens the page that already exists for it (the mill pages stay reachable from here).
 const tools = [
-  { n: '01 • Diagnostic Vision', title: 'AI Leaf Disease Scanner', text: 'Instant neural leaf upload for Peacock Spot & Knot diagnosis with 94.6% laboratory precision.', cta: 'Scan Leaf Now', icon: mdiLineScan, tone: 'dark', act: 'scanner' },
+  { n: '01 • Diagnostic Vision', title: 'AI Leaf Disease Scanner', text: 'Upload a leaf photo for a preliminary Peacock Spot or mite-damage screening.', cta: 'Scan Leaf Now', icon: mdiLineScan, tone: 'dark', act: 'scanner' },
   { n: '02 • Agronomist Chat', title: 'AI Agricultural Advisor', text: 'Specialized Souri terroir chatbot answering organic fertilization, pruning timing, and organic Bordeaux prep.', cta: 'Consult Agronomist', icon: mdiBrain, tone: 'lime', act: 'agronomist' },
   { n: '03 • Predictive Stress', title: 'Climate Intelligence & Simulator', text: 'Simulate heatwaves, cold front chilling hours, and seasonal soil aquifer retention scenarios.', cta: 'Run Simulator', icon: mdiWeatherHurricane, tone: 'gray', act: 'simulator', to: '/analytics' },
-  { n: '04 • Spectral Purity', title: 'Olive Oil UV Analyzer', text: '365nm spectral fluorescence verification preventing adulteration and guaranteeing Extra Virgin status.', cta: 'Check UV Spectrum', icon: mdiMicroscope, tone: 'amber', act: 'uv', to: '/samples' },
+  { n: '04 • UV Screening', title: 'UV Scan', text: 'Preliminary UV fluorescence screening of a sample photo, with history and a printable report.', cta: 'Open UV Scan', icon: mdiMicroscope, tone: 'amber', act: 'uv', to: '/tools/uv' },
   { n: '05 • Proof of Terroir', title: 'Smart Traceability & QR', text: 'Export passport generation with cryptographically certified harvest timestamps and council origin seals.', cta: 'Generate Batch QR', icon: mdiQrcode, tone: 'ink', act: 'certify' },
 ];
 
@@ -20,7 +20,6 @@ export default function Toolkit() {
   const run = (a: string, to?: string) => {
     if (a === 'scanner' || a === 'agronomist' || a === 'certify') open(a);
     else if (a === 'simulator') toast(pick('جارٍ تحميل محاكي إجهاد المناخ المحلي لمدرّجات 4ب', 'Loading microclimate stress simulator for Terraces 4B'));
-    else toast(pick('مقياس الفلورة UV (يو في) 365nm جاهز للدفعة PAL-NAB-098', 'UV 365nm Fluorometer ready for Lot PAL-NAB-098'));
     if (to) go(to);
   };
   return (

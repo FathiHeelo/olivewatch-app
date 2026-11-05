@@ -11,6 +11,7 @@ import Samples from './pages/Samples';
 import Suppliers from './pages/Suppliers';
 import Tools from './pages/Tools';
 import Traceability from './pages/Traceability';
+import UvScan from './pages/UvScan';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="farms" element={<Farms />} />
         <Route path="tools" element={<Tools />} />
+        <Route path="tools/uv" element={<UvScan />} />
         <Route path="analytics" element={<Climate />} />
         <Route path="profile" element={<Profile />} />
         {/* The mill pages built earlier keep their routes. */}

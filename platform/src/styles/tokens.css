@@ -9,6 +9,11 @@
 @import '@fontsource/plus-jakarta-sans/800.css';
 @import '@fontsource/space-grotesk/500.css';
 @import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/cairo/600.css';
+@import '@fontsource/cairo/700.css';
+@import '@fontsource/tajawal/400.css';
+@import '@fontsource/tajawal/500.css';
+@import '@fontsource/tajawal/700.css';
 
 /* Tokens from the Stitch design "OliveWatch AI - Farmer Web Dashboard" (Terra Terroir Agritech). */
 :root {
@@ -37,6 +42,43 @@
   --gap: 24px;
   --font-latin: 'Plus Jakarta Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --font-label: 'Space Grotesk', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  /* OliveWatch brand palette. The UV screening page uses only these, through the --uv-* tokens below. */
+  --ow-deep-olive: #354f32;
+  --ow-olive: #758b45; /* positive indicators: bars, icons, borders (3.4:1 on off-white, never body text) */
+  --ow-gold: #d6a84f;
+  --ow-earth: #796044; /* flagged states (5.4:1 on off-white) */
+  --ow-off-white: #f7f7f0;
+  --ow-charcoal: #252b24;
+
+  --uv-bg: var(--ow-off-white);
+  --uv-card: #ffffff;
+  --uv-text: var(--ow-charcoal);
+  --uv-muted: #4e554b;
+  --uv-border: #dcddd0;
+  --uv-primary: var(--ow-deep-olive);
+  --uv-on-primary: #ffffff;
+  --uv-highlight: var(--ow-gold);
+  --uv-on-highlight: var(--ow-charcoal);
+  --uv-positive: var(--ow-olive);
+  --uv-positive-tint: #e8eddb;
+  --uv-positive-ink: var(--ow-deep-olive);
+  --uv-flagged: var(--ow-earth);
+  --uv-flagged-tint: #f4ecdc;
+  --uv-flagged-ink: var(--ow-earth);
+  --uv-retake-tint: #ecede6;
+  --uv-retake-ink: var(--ow-charcoal);
+  --uv-dark: var(--ow-charcoal);
+  --uv-on-dark: #f7f7f0;
+  --uv-track: #e2e4d8;
+  --uv-channel-red: #9e4a3a;
+  --uv-channel-green: var(--ow-olive);
+  --uv-channel-blue: #4f6b8a;
+  --uv-print-paper: #ffffff;
+  --uv-print-ink: #000000;
+  --uv-print-rule: #999999;
+  --uv-font-heading: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --uv-font-body: 'Tajawal', 'IBM Plex Sans Arabic', system-ui, sans-serif;
 }
 
 * {

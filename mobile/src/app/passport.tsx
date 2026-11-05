@@ -110,7 +110,7 @@ export default function Passport() {
             <QRCode value={`olivewatch:${LOT}`} size={176} color={colors.primary} backgroundColor={colors.surface} />
           </View>
           <Txt size={13} face="latin" color={colors.muted} style={{ textAlign: 'center', lineHeight: 20 }}>
-            Scan to verify bottle authenticity and tree origin on blockchain / public registry.
+            Scan to see this batch’s record and tree origin. The code does not prove that the oil is authentic.
           </Txt>
           <Row style={{ alignSelf: 'stretch', gap: 8, backgroundColor: colors.raised, borderWidth: 1, borderColor: colors.border, borderRadius: 12, paddingHorizontal: 12, height: 44 }}>
             <Icon name="link" size={18} color={colors.muted} />

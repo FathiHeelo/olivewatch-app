@@ -36,6 +36,7 @@ const home: Row[] = [
   ['Rain Today', 'مطر اليوم'],
   ['Scan Leaf AI', 'افحص الورقة', 'Scan Leaf AI'],
   ['UV Oil Scan', 'فحص الزيت بـ UV (يو في)'],
+  ['UV scan history', 'سجل فحوص UV (يو في)'],
   ['Satellite NDVI', 'NDVI (إن دي في آي) من القمر الصناعي'],
   ['Ask AI Murshid', 'اسأل المرشد الذكي'],
   ['Trace Batch QR', 'تتبّع الدفعة بـ QR'],
@@ -50,7 +51,7 @@ const home: Row[] = [
   ['Olive Leaf Scab (عين الطاووس)', 'جرب أوراق الزيتون (عين الطاووس)', 'Olive Leaf Scab'],
   ['Detected at 96% AI confidence', 'رُصد بثقة ذكاء اصطناعي 96%'],
   ['Plot A - Tree #89', 'القطعة أ - الشجرة 89'],
-  ['Souri Pure', 'صوري أصيل'],
+  ['Healthy', 'سليمة'],
   ['Healthy Souri Foliage (أوراق سليمة)', 'أوراق صورية سليمة', 'Healthy Souri Foliage'],
   ['99% confidence • Prime Condition', 'ثقة 99% • حالة ممتازة'],
   ['Palestinian Olive Oil Council Verified', 'موثّق من مجلس الزيت والزيتون الفلسطيني'],
@@ -220,53 +221,6 @@ const diagnosis: Row[] = [
   ['Consult AI Agronomist (المرشد الذكي)', 'استشر المرشد الزراعي الذكي', 'Consult AI Agronomist'],
 ];
 
-const oil: Row[] = [
-  ['UV Oil Analyzer', 'فاحص الزيت بـ UV (يو في)'],
-  ['فاحص الفلورة والأصالة 365nm', 'فاحص الفلورة والأصالة 365nm', 'Fluorescence and authenticity analyzer 365nm'],
-  ['حصاد فوري', 'حصاد فوري', 'Fresh harvest'],
-  ['LOT ID:', 'رقم الدفعة:'],
-  ['معصرة الأصالة الحديثة', 'معصرة الأصالة الحديثة', 'Al-Asalah Modern Press'],
-  ['Al-Asalah Modern Press, Nablus Terraces', 'معصرة الأصالة الحديثة، مدرّجات نابلس'],
-  ['صوري عتيق', 'صوري عتيق', 'Old Souri'],
-  ['زمن العصر:', 'زمن العصر:', 'Pressing time:'],
-  ['خلال 14 ساعة من القطف', 'خلال 14 ساعة من القطف', 'Within 14 hours of picking'],
-  ['طريقة الفحص:', 'طريقة الفحص:', 'Test method:'],
-  ['طيف UV 365nm الذكي', 'طيف UV (يو في) 365nm الذكي', 'Smart UV 365nm spectrum'],
-  ['CHAMBER: ACTIVE 365nm', 'الغرفة: نشطة 365nm'],
-  ['675nm: EMISSION PEAK', '675nm: ذروة الانبعاث'],
-  ['NO SYNTHETIC CHLOROPHYLL', 'لا يوجد Chlorophyll (كلوروفيل) صناعي'],
-  ['10mL', '10 مل'],
-  ['PHENOLIC: OPTIMAL', 'Phenolic (فينوليك): مثالي'],
-  ['مقارنة البصمة الطيفية', 'مقارنة البصمة الطيفية', 'Spectral fingerprint comparison'],
-  ['Sample vs Authentic Souri Baseline', 'العينة مقابل المرجع الصوري الأصيل'],
-  ['نموذج V4.2', 'نموذج V4.2', 'Model V4.2'],
-  ['نتائج الفحص الطيفي بالذكاء الاصطناعي', 'نتائج الفحص الطيفي بالذكاء الاصطناعي', 'AI Spectral Analysis Results'],
-  ['مطابقة البصمة الأصلية', 'مطابقة البصمة الأصلية', 'Original fingerprint match'],
-  ['Authenticity Pattern Match', 'مطابقة نمط الأصالة'],
-  ['High Confidence', 'ثقة عالية'],
-  ['تطابق استثنائي مع مواصفة الزيت الصوري', 'تطابق استثنائي مع مواصفة الزيت الصوري', 'Exceptional match to the Souri oil specification'],
-  ['نسبة الكلوروفيل', 'نسبة Chlorophyll (كلوروفيل)', 'Chlorophyll ratio'],
-  ['مؤشر الكاروتين النموذجي', 'مؤشر Carotene (كاروتين) النموذجي', 'Typical carotene index'],
-  ['مرتفعات جبلية بكر', 'مرتفعات جبلية بكر', 'Pristine mountain highlands'],
-  ['مخاطر الخلط والشوائب', 'مخاطر الخلط والشوائب', 'Blending and impurity risk'],
-  ['انحراف غير مرصود', 'انحراف غير مرصود', 'No deviation detected'],
-  ['نقاء فائق (خالٍ من الزيوت المكررة)', 'نقاء فائق (خالٍ من الزيوت المكررة)', 'Superior purity (free of refined oils)'],
-  ['حموضة تقديرية (FFA)', 'حموضة تقديرية FFA (إف إف إيه)', 'Estimated acidity (FFA)'],
-  ['حمض الأوليك المقدر', 'حمض Oleic (أوليك) المقدّر', 'Estimated oleic acid'],
-  ['معيار البكر الممتاز (<0.8%)', 'معيار البكر الممتاز (<0.8%)', 'Extra virgin standard (<0.8%)'],
-  ['رقم البيروكسيد (PV)', 'رقم Peroxide (بيروكسايد) PV (بي في)', 'Peroxide value (PV)'],
-  ['meq O₂', 'مكافئ O₂'],
-  ['طازج / عصر موسمي', 'طازج / عصر موسمي', 'Fresh / seasonal pressing'],
-  ['أكسدة متدنية جداً', 'أكسدة متدنية جداً', 'Very low oxidation'],
-  ['تنبيه قانوني وفني معتمد', 'تنبيه قانوني وفني معتمد', 'Official legal and technical notice'],
-  ['هذا الفحص بالفلورة هو مؤشر أولي مساند للمزارع والمعصرة، ولا يغني عن شهادة الفحص المخبري المعتمدة من وزارة الزراعة أو مجلس الزيت والزيتون الفلسطيني.', 'هذا الفحص بالفلورة هو مؤشر أولي مساند للمزارع والمعصرة، ولا يغني عن شهادة الفحص المخبري المعتمدة من وزارة الزراعة أو مجلس الزيت والزيتون الفلسطيني.', 'This fluorescence test is a preliminary aid for the farmer and the mill. It does not replace the laboratory certificate approved by the Ministry of Agriculture or the Palestinian Olive Oil Council.'],
-  ['ختم التوثيق الجغرافي الرقمي', 'ختم التوثيق الجغرافي الرقمي', 'Digital geo-tag seal'],
-  ['Palestinian Terroir Geo-Tag: Nablus', 'ختم الموقع الجغرافي للتربة الفلسطينية: نابلس'],
-  ['إصدار رمز التتبع والشهادة', 'إصدار رمز التتبع والشهادة', 'Issue traceability code and certificate'],
-  ['حفظ في سجلات المعصرة', 'حفظ في سجلات المعصرة', 'Save to mill records'],
-  ['OliveWatch AI Spectral Engine • Nablus Mill Node #4', 'محرك OliveWatch AI الطيفي • عقدة معصرة نابلس 4'],
-];
-
 const passport: Row[] = [
   ['وثيقة تتبع الزيت الرقمية', 'وثيقة تتبع الزيت الرقمية', 'Digital oil traceability document'],
   ['PDF', 'PDF (بي دي إف)'],
@@ -287,7 +241,7 @@ const passport: Row[] = [
   ['680m Terroir', '680 م'],
   ['Decentralized Proof of Origin', 'إثبات المنشأ اللامركزي'],
   ['Ledger #4492A', 'السجل ⁦#4492A⁩'],
-  ['Scan to verify bottle authenticity and tree origin on blockchain / public registry.', 'امسح الرمز للتحقق من أصالة القارورة ومنشأ الشجرة على Blockchain (بلوكتشين) / السجل العام.'],
+  ['Scan to see this batch’s record and tree origin. The code does not prove that the oil is authentic.', 'امسح الرمز لترى سجل هذه الدفعة ومنشأ الشجرة. الرمز لا يثبت أصالة الزيت.'],
   ['Lab Analysis & Sensory', 'التحليل المخبري والحسّي'],
   ['Grade A+ Extra Virgin', 'درجة A+ بكر ممتاز'],
   ['FREE ACIDITY', 'الحموضة الحرة'],
@@ -327,7 +281,7 @@ const bands: Row[] = [
   ['إجهاد مرتفع', 'إجهاد مرتفع', 'High stress'],
 ];
 
-const all: Row[] = [...bands, ...home, ...nav, ...scan, ...climate, ...profile, ...diagnosis, ...oil, ...passport];
+const all: Row[] = [...bands, ...home, ...nav, ...scan, ...climate, ...profile, ...diagnosis, ...passport];
 
 export const DICT: Record<string, { ar: string; en: string }> = {};
 for (const [key, ar, en] of all) DICT[key] = { ar, en: en ?? key };

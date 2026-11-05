@@ -4,7 +4,8 @@ import { useRouter } from 'expo-router';
 import { Bar, Body, BrandHeader, Card, Eyebrow, Icon, IconName, Pill, PressScale, Row, Screen, Txt } from '../../components/ui';
 import { getRepository, HomeData } from '../../data/repository';
 import { useLang } from '../../i18n';
-import { colors, radius } from '../../theme';
+import { colors, radius, uv, uvFonts } from '../../theme';
+import { uvText } from '../../uv/zaytoun-i18n';
 
 type Metric = { ar: string; icon: IconName; value: string; unit?: string; chip?: string; sub: string; foot: string; bar: number; barColor: string; tone: string };
 const metrics: Metric[] = [
@@ -15,7 +16,8 @@ const metrics: Metric[] = [
 ];
 
 export default function Home() {
-  const { rtl, rowDir, pick, toggle, forwardIcon, nextIcon } = useLang();
+  const { rtl, rowDir, pick, toggle, forwardIcon, nextIcon, lang } = useLang();
+  const uvT = uvText(lang);
   const router = useRouter();
   const [data, setData] = useState<HomeData | null>(null);
   useEffect(() => getRepository().subscribeHome(setData), []);
@@ -46,6 +48,24 @@ export default function Home() {
         }
       />
       <Body>
+        {/* UV screening, one tap from Home (two from any tab) */}
+        <PressScale onPress={() => router.push('/uv')} accessibilityLabel={uvT.startScan} style={{ backgroundColor: uv.primary, borderRadius: radius.card, padding: 16, minHeight: 72 }}>
+          <Row style={{ gap: 14 }}>
+            <View style={{ width: 48, height: 48, borderRadius: 14, backgroundColor: uv.highlight, alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="flashlight" size={26} color={uv.onHighlight} />
+            </View>
+            <View style={{ flex: 1, gap: 2 }}>
+              <Txt size={17} color={uv.onPrimary} style={{ fontFamily: uvFonts.heading, lineHeight: 26 }}>
+                {uvT.startScan}
+              </Txt>
+              <Txt size={14} color={uv.onPrimary} style={{ fontFamily: uvFonts.body }}>
+                {uvT.startScanHint}
+              </Txt>
+            </View>
+            <Icon name={forwardIcon} size={22} color={uv.onPrimary} />
+          </Row>
+        </PressScale>
+
         {/* Greeting */}
         <Card style={{ flexDirection: rowDir, alignItems: 'center', justifyContent: 'space-between' }}>
           <View style={{ gap: 6, flexShrink: 1 }}>
@@ -193,7 +213,7 @@ export default function Home() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, paddingRight: 8 }}>
           {([
             { label: 'Scan Leaf AI', icon: 'camera' as IconName, to: '/scan', gold: true },
-            { label: 'UV Oil Scan', icon: 'flask-outline' as IconName, to: '/oil' },
+            { label: 'UV Oil Scan', icon: 'flask-outline' as IconName, to: '/uv' },
             { label: 'Satellite NDVI', icon: 'satellite-variant' as IconName, to: '/climate' },
             { label: 'Ask AI Murshid', icon: 'head-cog-outline' as IconName, to: '/advisor' },
             { label: 'Trace Batch QR', icon: 'qrcode-scan' as IconName, to: '/passport' },
@@ -224,7 +244,7 @@ export default function Home() {
         </Row>
         {[
           { icon: 'virus' as IconName, tint: '#FBDAD4', ink: colors.error, title: 'Plot B - Tree #142', chip: 'Treated', name: 'Olive Leaf Scab (عين الطاووس)', note: 'Detected at 96% AI confidence' },
-          { icon: 'check-circle-outline' as IconName, tint: colors.secondaryContainer, ink: colors.primaryContainer, title: 'Plot A - Tree #89', chip: 'Souri Pure', name: 'Healthy Souri Foliage (أوراق سليمة)', note: '99% confidence • Prime Condition' },
+          { icon: 'check-circle-outline' as IconName, tint: colors.secondaryContainer, ink: colors.primaryContainer, title: 'Plot A - Tree #89', chip: 'Healthy', name: 'Healthy Souri Foliage (أوراق سليمة)', note: '99% confidence • Prime Condition' },
         ].map((s) => (
           <PressScale key={s.title} onPress={() => router.push('/diagnosis')} accessibilityLabel={s.title} style={{ backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.card, padding: 14 }}>
             <Row style={{ gap: 12 }}>
@@ -255,9 +275,22 @@ export default function Home() {
             <Icon name="qrcode" size={30} color={colors.primaryContainer} />
           </Row>
         </PressScale>
-        {/* room so the floating button never covers the last card */}
-        <View style={{ height: 96 }} />
+        {/* room so the floating buttons never cover the last card */}
+        <View style={{ height: 184 }} />
       </Body>
+
+      {/* Floating UV scan button, stacked above the advisor circle */}
+      <PressScale
+        onPress={() => router.push('/uv')}
+        accessibilityLabel={uvT.startScan}
+        outerStyle={{ position: 'absolute', bottom: 124, [rtl ? 'left' : 'right']: 28 }}
+        style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: uv.highlight, borderWidth: 3, borderColor: uv.primary, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}
+      >
+        <Icon name="flashlight" size={24} color={uv.onHighlight} />
+        <Txt size={14} color={uv.onHighlight} style={{ fontFamily: uvFonts.bodyBold, lineHeight: 16, textAlign: 'center' }}>
+          UV
+        </Txt>
+      </PressScale>
 
       {/* Floating "Ask the AI advisor" circle: stays on screen while the page scrolls */}
       <PressScale

@@ -40,7 +40,7 @@ export default function Hero({ farm }: { farm: Farm }) {
         </span>
         <div className="fw-pledge-text">
           <span className="fw-tag-line">
-            <em>{t('Palestinian Authenticity Charter')}</em>
+            <em>{t('Palestinian Origin Charter')}</em>
             <small>{t('Terrace Guardianship')}</small>
           </span>
           <h1>{t('"Every Tree Matters. Every Harvest Counts. Every Drop Has Value."')}</h1>

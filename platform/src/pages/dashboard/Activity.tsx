@@ -10,7 +10,7 @@ import { useOverlays } from '../../components/overlays/OverlayProvider';
 const log = [
   { date: 'Oct 24 • Today', time: '08:45 AM', title: 'Peacock Spot detected in Tree #142', text: 'Neural leaf scan flagged 86% foliar spore density. Agronomist protocol issued.', tone: 'red' },
   { date: 'Oct 23 • Yesterday', time: '04:12 PM', title: 'Nitrogen-sealed batch #PAL-NAB-2024-098 certified', text: '450 Liters of Extra Virgin Souri olive oil issued digital origin stamp.', tone: 'olive' },
-  { date: 'Oct 21', time: '11:30 AM', title: 'UV fluorescence analysis verified Grade A+ EVOO', text: 'Free fatty acidity confirmed at 0.34%, polyphenols at 512 mg/kg.', tone: 'brown' },
+  { date: 'Oct 21', time: '11:30 AM', title: 'UV screening: within the reference pattern (preliminary)', text: 'Laboratory verification recommended before any quality claim.', tone: 'brown' },
   { date: 'Oct 19', time: '02:15 PM', title: 'Cold press milling completed at Al-Asalah Mill', text: 'Two-phase centrifugal extraction kept under 26.4°C temperature ceiling.', tone: 'dark' },
 ];
 

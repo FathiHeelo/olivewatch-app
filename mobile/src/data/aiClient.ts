@@ -20,9 +20,6 @@ export type LeafAi = {
   reason_text?: string;
   data_source: 'gemini';
 };
-export type OilAi =
-  | { label: 'reference' | 'anomalous' | 'adulteration_indicator'; confidence: number; rejected: false; needs_lab: false; data_source: 'gemini' }
-  | { rejected: true; needs_lab: true; confidence: number; message: string; data_source: 'gemini' };
 export type AdvisorMessage = { role: 'user' | 'assistant'; text: string };
 export type AdvisorAi = { reply: string; data_source: 'gemini'; model: string };
 export type ClimateAi = { headline: string; explanation: string; comparison?: string[]; caveats: string[]; data_source: 'gemini' };
@@ -62,13 +59,6 @@ export async function uriToImage(uri: string): Promise<{ imageBase64: string; mi
 export async function aiLeaf(uri: string, lang: AiLang): Promise<AiResult<LeafAi>> {
   try {
     return post<LeafAi>('/ai/leaf', { lang, ...(await uriToImage(uri)) });
-  } catch {
-    return { ok: false, error: 'image_unreadable', status: 0, limit: false, retryAfter: null };
-  }
-}
-export async function aiOil(uri: string, lang: AiLang): Promise<AiResult<OilAi>> {
-  try {
-    return post<OilAi>('/ai/oil', { lang, ...(await uriToImage(uri)) });
   } catch {
     return { ok: false, error: 'image_unreadable', status: 0, limit: false, retryAfter: null };
   }

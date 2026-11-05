@@ -1,6 +1,33 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    "batches": { ".write": true },
+    "plots": { ".write": true },
+    "samples": { ".write": true },
+    "farms": { ".write": true },
+    "mills": { ".write": true },
+    "suppliers": { ".write": true },
+    "climate": { ".write": true },
+    "ndvi": { ".write": true },
+    "uvScans": {
+      "$userId": {
+        "$scanId": {
+          ".write": "!data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['at', 'mode', 'valid', 'source', 'app'])",
+          "at": { ".validate": "newData.isNumber() && newData.val() <= now + 60000" },
+          "mode": { ".validate": "newData.val() === 'uv'" },
+          "valid": { ".validate": "newData.isBoolean()" },
+          "decision": { ".validate": "newData.val() === 'within_reference' || newData.val() === 'aging_flagged' || newData.val() === 'oxidation_flagged' || newData.val() === 'suspicion_flagged'" },
+          "confidenceLevel": { ".validate": "newData.val() === 'low' || newData.val() === 'medium' || newData.val() === 'high'" },
+          "sampleId": { ".validate": "newData.isString() && newData.val().length <= 80" },
+          "batchId": { ".validate": "newData.isString() && newData.val().length <= 80" },
+          "source": { ".validate": "newData.val() === 'zaytoun-vision'" },
+          "app": { ".validate": "newData.val() === 'mobile' || newData.val() === 'platform'" },
+          "indicators": { ".validate": "newData.hasChildren()" },
+          "retake": { ".validate": "newData.hasChildren()" },
+          "$other": { ".validate": false }
+        }
+      }
+    }
   }
 }

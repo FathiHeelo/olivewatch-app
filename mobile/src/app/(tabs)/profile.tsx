@@ -7,7 +7,7 @@ import { colors } from '../../theme';
 const rows: { icon: IconName; en: string; ar: string; to?: string }[] = [
   { icon: 'pine-tree', en: 'My Groves', ar: 'بياراتي', to: '/groves' },
   { icon: 'qrcode-scan', en: 'Batch Passport', ar: 'وثيقة تتبع الزيت', to: '/passport' },
-  { icon: 'flask-outline', en: 'UV Oil Analyzer', ar: 'فاحص الفلورة', to: '/oil' },
+  { icon: 'history', en: 'UV scan history', ar: 'سجل فحوص UV', to: '/uv-history' },
   { icon: 'bell-outline', en: 'Notifications', ar: 'التنبيهات' },
   { icon: 'web', en: 'Language', ar: 'اللغة: عربي / EN' },
 ];

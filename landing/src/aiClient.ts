@@ -19,9 +19,6 @@ export type LeafAi = {
   reason_text?: string;
   data_source: 'gemini';
 };
-export type OilAi =
-  | { label: 'reference' | 'anomalous' | 'adulteration_indicator'; confidence: number; rejected: false; needs_lab: false; data_source: 'gemini' }
-  | { rejected: true; needs_lab: true; confidence: number; message: string; data_source: 'gemini' };
 export type AdvisorMessage = { role: 'user' | 'assistant'; text: string };
 export type AdvisorAi = { reply: string; data_source: 'gemini'; model: string };
 export type ClimateAi = { headline: string; explanation: string; comparison?: string[]; caveats: string[]; data_source: 'gemini' };
@@ -57,7 +54,6 @@ export async function fileToBase64(file: Blob): Promise<string> {
 const imageBody = async (file: Blob, lang: AiLang) => ({ lang, imageBase64: await fileToBase64(file), mimeType: file.type || 'image/jpeg' });
 
 export const aiLeaf = async (file: Blob, lang: AiLang) => post<LeafAi>('/ai/leaf', await imageBody(file, lang));
-export const aiOil = async (file: Blob, lang: AiLang) => post<OilAi>('/ai/oil', await imageBody(file, lang));
 export const aiAdvisor = (messages: AdvisorMessage[], lang: AiLang, context?: Record<string, unknown>) => post<AdvisorAi>('/ai/advisor', { lang, messages, context });
 /** `facts` must hold numbers the app computed (CSI, scenario values); the model only narrates them. */
 export const aiClimate = (facts: Record<string, unknown>, lang: AiLang) => post<ClimateAi>('/ai/climate', { lang, facts });

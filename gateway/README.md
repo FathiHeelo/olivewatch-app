@@ -76,15 +76,16 @@ All `POST`, JSON, `lang` is `"ar"` or `"en"`.
 | Route | Input | Output |
 |---|---|---|
 | `/ai/leaf` | `{ lang, imageBase64, mimeType }` | `{ label: healthy\|peacock_spot\|aculus_olearius\|rejected, confidence, quality, rejected, reason?, message?, reason_text?, data_source: "gemini" }` |
-| `/ai/oil` | `{ lang, imageBase64, mimeType }` | `{ label: reference\|anomalous\|adulteration_indicator, confidence, rejected:false, needs_lab:false }` or `{ rejected:true, needs_lab:true, confidence, message }` (no class) |
 | `/ai/advisor` | `{ lang, messages:[{role:"user"\|"assistant", text}], context? }` | `{ reply, data_source, model }` (single response, no streaming) |
 | `/ai/climate` | `{ lang, facts }` (numbers computed by the app) | `{ headline, explanation, comparison?, caveats }` |
 | `/ai/trace` | `{ lang, batch }` (the batch's real fields) | `{ title, summary, highlights, notes }` (`notes` are added by code) |
 | `/ai/insights` | `{ lang, data }` | `{ title, priority: high\|medium\|low, reason, action }` |
 | `GET /health`, `GET /ai/config` | | feature list; non-secret tuning (no instructions, never the key) |
 
+UV oil screening is not a gateway feature: it runs on the Zaytoun Vision backend (`zaytoun-backend/`).
+
 Rules enforced **in code**, not in the prompt: leaf confidence < 0.70 or `poor` quality => rejected "unclear image, retake";
-oil confidence < 0.60 => `needs_lab`, no class named; climate / trace / insights answers may not contain a number that
+climate / trace / insights answers may not contain a number that
 is not in the input (rejected, retried once); the model's JSON is validated with zod (invalid => retry once, then the
 safe state); Arabic scientific terms are forced into `English (Arabic pronunciation)` (`src/ai/glossary.ts`).
 

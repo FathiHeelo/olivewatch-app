@@ -1,0 +1,158 @@
+/* UV screening page (Zaytoun Vision flow, OliveWatch colours). Every colour is a --uv-* / --ow-* token from tokens.css. */
+.uv-page {
+  background: var(--uv-bg);
+  color: var(--uv-text);
+  font-family: var(--uv-font-body);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+.uv-page h1,
+.uv-page h2,
+.uv-page h3 {
+  font-family: var(--uv-font-heading);
+  color: var(--uv-text);
+  margin: 0;
+}
+.uv-page h1 { font-size: 28px; line-height: 1.4; }
+.uv-page h2 { font-size: 20px; line-height: 1.45; }
+.uv-page h3 { font-size: 17px; line-height: 1.45; }
+.uv-page p { margin: 0; }
+.uv-muted { color: var(--uv-muted); }
+.uv-card {
+  background: var(--uv-card);
+  border: 1px solid var(--uv-border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.uv-card.flagged { background: var(--uv-flagged-tint); border-color: var(--uv-flagged-tint); }
+.uv-card.retake { background: var(--uv-retake-tint); }
+.uv-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.uv-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.uv-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.uv-btn {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: var(--radius-control);
+  border: 1.5px solid var(--uv-primary);
+  background: var(--uv-card);
+  color: var(--uv-primary);
+  font: 700 15px var(--uv-font-body);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.uv-btn.primary { background: var(--uv-primary); color: var(--uv-on-primary); }
+.uv-btn.highlight { background: var(--uv-highlight); border-color: var(--uv-highlight); color: var(--uv-on-highlight); }
+.uv-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.uv-btn:focus-visible,
+.uv-input:focus-visible { outline: 3px solid var(--uv-highlight); outline-offset: 2px; }
+.uv-input {
+  min-height: 48px;
+  width: 100%;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--uv-border);
+  background: var(--uv-bg);
+  color: var(--uv-text);
+  padding: 0 14px;
+  font: 400 15px var(--uv-font-body);
+}
+.uv-label { font-weight: 700; display: grid; gap: 6px; }
+.uv-chip {
+  display: inline-block;
+  justify-self: start;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.uv-chip.mode { background: var(--uv-primary); color: var(--uv-on-primary); }
+.uv-chip.within_reference { background: var(--uv-positive-tint); color: var(--uv-positive-ink); }
+.uv-chip.aging_flagged,
+.uv-chip.oxidation_flagged,
+.uv-chip.suspicion_flagged { background: var(--uv-flagged-tint); color: var(--uv-flagged-ink); }
+.uv-chip.retake { background: var(--uv-retake-tint); color: var(--uv-retake-ink); }
+.uv-stage {
+  min-height: 240px;
+  border-radius: var(--radius-card);
+  background: var(--uv-dark);
+  color: var(--uv-on-dark);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  text-align: center;
+  padding: 12px;
+}
+.uv-stage img,
+.uv-stage video { max-width: 100%; max-height: 320px; border-radius: 12px; }
+.uv-drop { border: 2px dashed var(--uv-border); }
+.uv-drop.over { border-color: var(--uv-primary); background: var(--uv-positive-tint); }
+.uv-list { margin: 0; padding-inline-start: 20px; display: grid; gap: 6px; color: var(--uv-muted); }
+.uv-level { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.uv-level i { width: 20px; height: 8px; border-radius: 4px; background: var(--uv-track); display: inline-block; }
+.uv-level i.on { background: var(--uv-primary); }
+.uv-bar { height: 10px; border-radius: 5px; background: var(--uv-track); overflow: hidden; }
+.uv-bar > span { display: block; height: 100%; border-radius: 5px; }
+.uv-bar > span.red { background: var(--uv-channel-red); }
+.uv-bar > span.green { background: var(--uv-channel-green); }
+.uv-bar > span.blue { background: var(--uv-channel-blue); }
+.uv-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--uv-flagged-tint);
+  color: var(--uv-text);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  font-weight: 700;
+}
+.uv-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.uv-steps li { display: flex; gap: 10px; align-items: center; }
+.uv-steps li.pending { color: var(--uv-muted); }
+.uv-steps li.active { font-weight: 700; }
+.uv-spin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--uv-track);
+  border-top-color: var(--uv-primary);
+  animation: uv-spin 0.9s linear infinite;
+}
+@keyframes uv-spin { to { transform: rotate(360deg); } }
+.uv-table-wrap { overflow-x: auto; position: relative; }
+.uv-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.uv-table th,
+.uv-table td { padding: 10px 12px; border-bottom: 1px solid var(--uv-border); text-align: start; vertical-align: middle; }
+.uv-table th { font-family: var(--uv-font-heading); font-weight: 700; color: var(--uv-text); }
+.uv-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.uv-trace { border-top: 1px solid var(--uv-border); padding-top: 10px; display: grid; gap: 6px; }
+.uv-print { display: none; }
+.uv-sr { position: absolute; inset-inline-start: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .uv-page { padding: 16px; }
+  .uv-grid2 { grid-template-columns: 1fr; }
+  .uv-filters { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uv-spin { animation: none; }
+}
+
+/* Printable report: only the report block is printed. */
+@media print {
+  body * { visibility: hidden; }
+  .uv-print,
+  .uv-print * { visibility: visible; }
+  .uv-print { display: block; position: absolute; inset: 0 0 auto 0; padding: 24px; background: var(--uv-print-paper); color: var(--uv-print-ink); font-family: var(--uv-font-body); }
+  .uv-print h1, .uv-print h2 { font-family: var(--uv-font-heading); }
+  .uv-print table { width: 100%; border-collapse: collapse; }
+  .uv-print th, .uv-print td { border: 1px solid var(--uv-print-rule); padding: 6px 8px; text-align: start; }
+  .uv-print .uv-notice { border: 2px solid var(--uv-print-ink); background: var(--uv-print-paper); margin-top: 16px; }
+}

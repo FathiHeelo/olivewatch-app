@@ -4,6 +4,7 @@ import Toolkit from './dashboard/Toolkit';
 
 // AI tools, plus the mill pages that were built earlier (they keep working under their own routes).
 const mill = [
+  { to: '/tools/uv', label: 'UV Scan' },
   { to: '/mill', label: 'Mill dashboard' },
   { to: '/batches', label: 'Batches' },
   { to: '/suppliers', label: 'Suppliers' },

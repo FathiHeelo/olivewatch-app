@@ -38,5 +38,51 @@ export const fonts = {
   labelBold: 'SpaceGrotesk_700Bold',
 };
 
+// OliveWatch brand palette. The UV screening screens use only these, through the `uv` tokens below.
+export const palette = {
+  deepOlive: '#354F32', // primary, dark backgrounds
+  olive: '#758B45', // positive indicators (bars, icons, borders; 3.4:1 on off-white, so never body text)
+  gold: '#D6A84F', // highlights
+  earth: '#796044', // flagged states (5.4:1 on off-white)
+  offWhite: '#F7F7F0', // light backgrounds
+  charcoal: '#252B24', // text and dark elements
+};
+
+// Semantic tokens for the UV screens. Status is never shown by colour alone: every tint goes with a text label.
+export const uv = {
+  bg: palette.offWhite,
+  card: '#FFFFFF',
+  text: palette.charcoal,
+  muted: '#4E554B', // 7:1 on off-white
+  border: '#DCDDD0',
+  primary: palette.deepOlive,
+  onPrimary: '#FFFFFF',
+  highlight: palette.gold,
+  onHighlight: palette.charcoal,
+  positive: palette.olive,
+  positiveTint: '#E8EDDB',
+  positiveInk: palette.deepOlive,
+  flagged: palette.earth,
+  flaggedTint: '#F4ECDC',
+  flaggedInk: palette.earth,
+  retakeTint: '#ECEDE6',
+  retakeInk: palette.charcoal,
+  darkChamber: palette.charcoal,
+  onDark: '#F7F7F0',
+  track: '#E2E4D8',
+  // Evidence bars for the three emission channels (always shown next to their names)
+  channelRed: '#9E4A3A',
+  channelGreen: palette.olive,
+  channelBlue: '#4F6B8A',
+};
+
+export const uvFonts = {
+  heading: 'Cairo_700Bold',
+  headingSemi: 'Cairo_600SemiBold',
+  body: 'Tajawal_400Regular',
+  bodyMedium: 'Tajawal_500Medium',
+  bodyBold: 'Tajawal_700Bold',
+};
+
 export const radius = { card: 20, control: 12, chip: 999, tile: 16 };
 export const space = { gutter: 16, gap: 16 };

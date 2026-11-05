@@ -1,5 +1,5 @@
 // Output validation. The model's JSON is checked against these zod schemas IN CODE; an invalid answer is retried
-// once and then turned into a safe state by the caller (unclear image / lab verification / unavailable).
+// once and then turned into a safe state by the caller (unclear image / unavailable).
 import { z } from 'zod';
 
 export const leafSchema = z.object({
@@ -7,11 +7,6 @@ export const leafSchema = z.object({
   confidence: z.number().min(0).max(1),
   quality: z.enum(['good', 'acceptable', 'poor']),
   reason: z.string().max(400).optional(),
-});
-
-export const oilSchema = z.object({
-  label: z.enum(['reference', 'anomalous', 'adulteration_indicator']),
-  confidence: z.number().min(0).max(1),
 });
 
 export const climateSchema = z.object({

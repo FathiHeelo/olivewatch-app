@@ -1,0 +1,145 @@
+{
+ "sampleName": "fixture",
+ "purityScore": 87,
+ "purity_score": 87,
+ "adulterantDetected": null,
+ "adulterant_detected": null,
+ "confidence": 0.762,
+ "tags": [
+  "fresh_evoo",
+  "red_392",
+  "green_172",
+  "blue_111"
+ ],
+ "status": "pure",
+ "label": "fresh_evoo",
+ "authenticityScore": 100,
+ "fakeProbability": 0,
+ "freshnessScore": 87,
+ "evooScore": 87,
+ "estimatedAgingStep": 1,
+ "agingConfidence": 70,
+ "category": "fresh_evoo",
+ "verdict": "Fresh EVOO-like",
+ "uvFingerprint": {
+  "redChlorophyll": 392.11,
+  "greenBiologicalBaseline": 172.44,
+  "blueOxidation": 110.76,
+  "redBlueRatio": 3.5403,
+  "greenBlueRatio": 1.557
+ },
+ "qualityFlags": [],
+ "qualityMetrics": {
+  "signalFraction": 0.4605507497307049,
+  "saturatedPixelFraction": 0,
+  "blurVariance": 189.04158675150194,
+  "centerBlueMean": 28.440475477573507,
+  "edgeBlueMean": 28.060838178161077,
+  "blueEdgeCenterRatio": 0.9866514789331399,
+  "centerRedMean": 123.03982274387688,
+  "topRedMean": 107,
+  "redSurfaceRatio": 0.86963713653178,
+  "borderMean": 8.156777678533452,
+  "borderBrightFraction": 0
+ },
+ "photoSetup": {
+  "validForAnalysis": true,
+  "setupScore": 100,
+  "category": "valid_dark_uv_oil",
+  "enhancementAttempted": false,
+  "enhancementApplied": false,
+  "enhancementMethod": null,
+  "recoveryLimitReason": null,
+  "reasons": [
+   "The photo passed the setup checks for dark-room UV screening."
+  ],
+  "retakeInstructions": []
+ },
+ "decisionTrace": {
+  "rule": "fresh_rule_authenticity_and_freshness_high",
+  "qualityGatePassed": true,
+  "qualityFlags": [],
+  "signals": {
+   "redDetected": true,
+   "greenBaselinePresent": true,
+   "blueDominant": false,
+   "redWeak": false
+  },
+  "scores": {
+   "redPresenceScore": 100,
+   "greenPresenceScore": 100,
+   "authenticityScore": 100,
+   "fakeProbability": 0,
+   "freshnessScore": 87
+  },
+  "channelFractions": {
+   "redFraction": 0.5806,
+   "greenFraction": 0.2554,
+   "blueFraction": 0.164
+  },
+  "notes": [
+   "A red-looking pixel region is only counted as useful evidence when it is inside the liquid ROI and not a surface/glare hotspot.",
+   "The fake/refined rule requires weak red, dominant blue, and absent green baseline after the quality gate passes."
+  ]
+ },
+ "scientificExplanation": "The red chlorophyll signal is strong, the green biological baseline is present, and blue oxidation is low. The sample is closest to a fresh EVOO-like UV fingerprint.",
+ "referenceComparison": {
+  "distanceFromAgingStep0": 13,
+  "closestReference": {
+   "agingStep": 1,
+   "fluorescence": {
+    "redBlueRatio": 45.7384,
+    "greenBlueRatio": 5.8809,
+    "blue430450": 5.5764,
+    "green510550": 27.0382,
+    "red660690": 193.3485
+   },
+   "absorption": {
+    "K232": 1.9421,
+    "K268": 0.1047,
+    "deltaK": -0.002
+   }
+  },
+  "step0Reference": {
+   "agingStep": 0,
+   "fluorescence": {
+    "redBlueRatio": 48.8616,
+    "greenBlueRatio": 6.1074,
+    "blue430450": 5.1935,
+    "green510550": 26.2766,
+    "red660690": 194.283
+   },
+   "absorption": {
+    "K232": 1.901,
+    "K268": 0.1152,
+    "deltaK": -0.0021
+   }
+  },
+  "step9Reference": {
+   "agingStep": 9,
+   "fluorescence": {
+    "redBlueRatio": 22.8824,
+    "greenBlueRatio": 3.6979,
+    "blue430450": 10.4872,
+    "green510550": 33.4895,
+    "red660690": 189.4046
+   },
+   "absorption": {
+    "K232": 2.395,
+    "K268": 0.2802,
+    "deltaK": 0.0125
+   }
+  }
+ },
+ "calibration": {
+  "isCalibrated": false,
+  "expectedPhoneToLabErrorPct": 25,
+  "expectedAgingStepError": 2
+ },
+ "absorptionNote": "K232, K268, and deltaK are stored from lab absorption files for reference. A normal phone UV fluorescence photo cannot directly measure those absorption metrics.",
+ "fluorescence_intensity": 225.1,
+ "recommendation": "The red chlorophyll signal is strong, the green biological baseline is present, and blue oxidation is low. The sample is closest to a fresh EVOO-like UV fingerprint.",
+ "sample_name": "fixture",
+ "adulteration_pct": 0,
+ "risk_level": "pure"
+}
